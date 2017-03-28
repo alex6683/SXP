@@ -25,18 +25,17 @@ buildscript {
 }
 
 //Adding EthereumJ libs
-buildscript {
+//buildscript {
   repositories {
 	maven {
 		url 'https://dl.bintray.com/ethereum/maven'
 	}
   }
   dependencies {
-  	classpath "org.ethereum:ethereumj-core:1.4.3-RELEASE"
-	classpath "org.ethereum:solcJ-all:0.4.8-REALSE"
-
+  	compile "org.ethereum:ethereumj-core:1.4.3-RELEASE"
+	compile "org.ethereum:solcJ-all:0.4.8"
   }
-}
+//}
 
 //apply plugin: "com.github.sherter.google-java-format"
 if(JavaVersion.current()>= JavaVersion.VERSION_1_8){
@@ -175,6 +174,8 @@ dependencies {
 	compile 'javax.el:javax.el-api:2.2.4'
 	compile 'org.glassfish.web:javax.el:2.2.4'
 
+	//compile "org.ethereum:solcJ-all:0.4.8"
+	//compile "org.ethereum:ethereumj-core:1.4.3-RELEASE"
 	
 	testCompile 'org.apache.commons:commons-lang3:3.1'
 	testCompile fileTree(dir: './libs', include: 'loremipsum-1.0.jar')
