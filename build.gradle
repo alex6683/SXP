@@ -24,6 +24,21 @@ buildscript {
   }
 }
 
+//Adding EthereumJ libs
+buildscript {
+  repositories {
+	maven {
+		url 'https://oss.jfrog.org/libs-snapshot'
+		url 'https://mvnrepository.com/artifact'
+	}
+  }
+  dependencies {
+  	classpath "org.ethereum:ethereumj-core:1.4.3-RELEASE"
+	classpath "org.ethereum:solcJ-all:0.4.3-REALSE"
+
+  }
+}
+
 //apply plugin: "com.github.sherter.google-java-format"
 if(JavaVersion.current()>= JavaVersion.VERSION_1_8){
 	apply plugin: "org.sonarqube"
@@ -160,7 +175,7 @@ dependencies {
 	compile 'org.hibernate:hibernate-validator:5.3.3.Final'
 	compile 'javax.el:javax.el-api:2.2.4'
 	compile 'org.glassfish.web:javax.el:2.2.4'
-	
+
 	
 	testCompile 'org.apache.commons:commons-lang3:3.1'
 	testCompile fileTree(dir: './libs', include: 'loremipsum-1.0.jar')
