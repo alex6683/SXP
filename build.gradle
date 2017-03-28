@@ -25,17 +25,15 @@ buildscript {
 }
 
 //Adding EthereumJ libs
-//buildscript {
-  repositories {
+repositories {
 	maven {
 		url 'https://dl.bintray.com/ethereum/maven'
 	}
-  }
-  dependencies {
+}
+dependencies {
   	compile "org.ethereum:ethereumj-core:1.4.3-RELEASE"
 	compile "org.ethereum:solcJ-all:0.4.8"
-  }
-//}
+}
 
 //apply plugin: "com.github.sherter.google-java-format"
 if(JavaVersion.current()>= JavaVersion.VERSION_1_8){
