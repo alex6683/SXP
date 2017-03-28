@@ -28,13 +28,12 @@ buildscript {
 buildscript {
   repositories {
 	maven {
-		url 'https://oss.jfrog.org/libs-snapshot'
-		url 'https://mvnrepository.com/artifact'
+		url 'https://dl.bintray.com/ethereum/maven'
 	}
   }
   dependencies {
   	classpath "org.ethereum:ethereumj-core:1.4.3-RELEASE"
-	classpath "org.ethereum:solcJ-all:0.4.3-REALSE"
+	classpath "org.ethereum:solcJ-all:0.4.8-REALSE"
 
   }
 }
