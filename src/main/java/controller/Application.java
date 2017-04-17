@@ -6,6 +6,13 @@ import controller.tools.LoggerUtilities;
 import model.syncManager.UserSyncManagerImpl;
 import network.api.Peer;
 import network.factories.PeerFactory;
+import org.ethereum.facade.Ethereum;
+import org.ethereum.facade.EthereumFactory;
+import org.ethereum.samples.BasicSample;
+import org.ethereum.samples.MordenSample;
+import protocol.impl.blockChain.BlockChainImpl;
+import protocol.impl.blockChain.BlockChainRopstenConfig;
+import protocol.impl.blockChain.Config;
 import rest.api.Authentifier;
 import rest.factories.AuthentifierFactory;
 import rest.factories.RestServerFactory;
@@ -55,8 +62,15 @@ public class Application {
 	}
 
 	public static void main(String[] args) {
-		new Application();
-		Application.getInstance().runForTests(8081);
+		//new Application();
+		//Application.getInstance().runForTests(8081);
+		try {
+			System.out.println("Config Ropsten :");
+			EthereumFactory.createEthereum(Config.class);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 	

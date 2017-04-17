@@ -28,3 +28,6 @@ derby.log
 *.iml
 .idea
 out
+/database-ropstenSample/
+/database/
+/mordenSampleDb/
