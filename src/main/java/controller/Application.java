@@ -62,17 +62,12 @@ public class Application {
 	}
 
 	public static void main(String[] args) {
-		//new Application();
-		//Application.getInstance().runForTests(8081);
-		try {
-			System.out.println("Config Ropsten :");
-			EthereumFactory.createEthereum(Config.class);
+		new Application();
+		Application.getInstance().runForTests(8081);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		EthereumFactory.createEthereum(Config.class);
 
-	}
+	}S
 	
 	public void stop(){
 		peer.stop();

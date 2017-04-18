@@ -1,5 +1,6 @@
 package protocol.impl.blockChain;
 
+import org.ethereum.config.SystemProperties;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -9,6 +10,7 @@ public class Config extends BlockChainRopstenConfig.RopstenSampleConfig {
 
     @Bean
     public BlockChainRopstenConfig sampleBean() {
+        //System.out.println("////// Configuration en cours.. ///////");
         return new BlockChainRopstenConfig();
     }
 }

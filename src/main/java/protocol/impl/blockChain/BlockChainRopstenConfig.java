@@ -56,8 +56,6 @@ public class BlockChainRopstenConfig extends BasicSample{
                         "blockchain.config.name = 'ropsten' \n" +
                         "database.dir = database-ropstenSample";
 
-        public abstract BlockChainRopstenConfig sampleBean();
-
         @Bean
         public SystemProperties systemProperties() {
             SystemProperties props = new SystemProperties();
