@@ -10,6 +10,6 @@ import java.math.BigInteger;
 /**
  * Created by alex on 21/03/17.
  */
-public class BlockChainContract extends EstablisherContract<BigInteger, EthereumKey, , >{
+public class BlockChainContract /*extends EstablisherContract<BigInteger, EthereumKey, , >*/{
 
 }
