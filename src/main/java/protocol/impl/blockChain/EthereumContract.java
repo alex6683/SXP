@@ -9,21 +9,42 @@ import java.io.IOException;
 /**
  * Created by alex on 18/04/17.
  */
-public abstract class EthereumContract {
+public class EthereumContract {
     private String contractSrc ;
-    private byte[] contractAdr ;
     private CallTransaction.Contract contractABI ;
+    private byte[] contractAdr ;
 
     public EthereumContract(String src) {
         contractSrc = src ;
-        contractAdr = null ;
         contractABI = null ;
+        contractAdr = null ;
     }
 
+    //GETTERS//
     public String getContractSrc() {
         return contractSrc;
     }
+    public CallTransaction.Contract getContractABI() {
+        return contractABI;
+    }
+    public byte[] getContractAdr() {
+        return contractAdr;
+    }
+    ///////////
 
+    //SETTERS//
+    public void setContractABI(CallTransaction.Contract contractABI) {
+        this.contractABI = contractABI;
+    }
+    public void setContractAdr(byte[] contractAdr) {
+        this.contractAdr = contractAdr;
+    }
+    public void setContractSrc(String contractSrc) {
+        this.contractSrc = contractSrc;
+    }
+    ///////////
+
+    //COMPILATION//
     public SolidityCompiler.Result compileResult() throws IOException{
         if(contractSrc==null) {
             throw new NullPointerException("EthereumContract is empty") ;
@@ -40,9 +61,7 @@ public abstract class EthereumContract {
         }
         return compiled ;
     }
-
-    public CompilationResult.ContractMetadata compileData() throws  IOException {
-        SolidityCompiler.Result compiled = this.compileResult() ;
+    public CompilationResult.ContractMetadata compileData(SolidityCompiler.Result compiled) throws  IOException {
         CompilationResult resultCompile = CompilationResult.parse(compiled.output) ;
         if (resultCompile.contracts.isEmpty()) {
             throw new RuntimeException("Compilation failed, no contracts returned:\n" + compiled.errors);
@@ -52,6 +71,18 @@ public abstract class EthereumContract {
         if (metadata.bin == null || metadata.bin.isEmpty()) {
             throw new RuntimeException("Compilation failed, no binary returned:\n" + compiled.errors);
         }
+
+        setContractABI(new CallTransaction.Contract(metadata.abi));
+
         return metadata ;
+    }
+    /////////////
+
+
+    public boolean isCompiled() {
+        return !(contractABI == null) ;
+    }
+    public boolean isDeployed() {
+        return !(contractAdr == null) ;
     }
 }
