@@ -1,5 +1,6 @@
 package protocol.impl.blockChain;
 
+import org.ethereum.facade.Ethereum ;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.solidity.compiler.CompilationResult;
 import org.ethereum.solidity.compiler.SolidityCompiler;
@@ -11,12 +12,12 @@ import java.io.IOException;
  */
 public class EthereumContract {
     private String contractSrc ;
-    private CallTransaction.Contract contractABI ;
+    private CompilationResult.ContractMetadata contractMetadata ;
     private byte[] contractAdr ;
 
     public EthereumContract(String src) {
         contractSrc = src ;
-        contractABI = null ;
+        contractMetadata = null ;
         contractAdr = null ;
     }
 
@@ -24,8 +25,8 @@ public class EthereumContract {
     public String getContractSrc() {
         return contractSrc;
     }
-    public CallTransaction.Contract getContractABI() {
-        return contractABI;
+    public CompilationResult.ContractMetadata getContractABI() {
+        return contractMetadata;
     }
     public byte[] getContractAdr() {
         return contractAdr;
@@ -33,8 +34,8 @@ public class EthereumContract {
     ///////////
 
     //SETTERS//
-    public void setContractABI(CallTransaction.Contract contractABI) {
-        this.contractABI = contractABI;
+    public void setContractMetadata(CompilationResult.ContractMetadata contractMetadata) {
+        this.contractMetadata = contractMetadata;
     }
     public void setContractAdr(byte[] contractAdr) {
         this.contractAdr = contractAdr;
@@ -72,7 +73,7 @@ public class EthereumContract {
             throw new RuntimeException("Compilation failed, no binary returned:\n" + compiled.errors);
         }
 
-        setContractABI(new CallTransaction.Contract(metadata.abi));
+        setContractMetadata(metadata);
 
         return metadata ;
     }
@@ -80,7 +81,7 @@ public class EthereumContract {
 
 
     public boolean isCompiled() {
-        return !(contractABI == null) ;
+        return !(contractMetadata == null) ;
     }
     public boolean isDeployed() {
         return !(contractAdr == null) ;

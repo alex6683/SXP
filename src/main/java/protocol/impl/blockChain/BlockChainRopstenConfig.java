@@ -54,7 +54,7 @@ public class BlockChainRopstenConfig extends BasicSample{
                         "sync.enabled = true \n" +
                         "genesis = ropsten.json \n" +
                         "blockchain.config.name = 'ropsten' \n" +
-                        "database.dir = database-ropstenSample";
+                        "database.dir = database-ropsten";
 
         public abstract BlockChainRopstenConfig sampleBean();
 
