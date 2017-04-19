@@ -16,6 +16,7 @@ public class DeployContract implements Runnable {
 
     @Override
     public void run() {
+        sync.run() ;
         while(true) {
             if (!sync.getIsSyncDone()) {
                 try {

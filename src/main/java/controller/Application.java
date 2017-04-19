@@ -6,11 +6,8 @@ import controller.tools.LoggerUtilities;
 import model.syncManager.UserSyncManagerImpl;
 import network.api.Peer;
 import network.factories.PeerFactory;
-import org.ethereum.facade.Ethereum;
+import org.ethereum.config.blockchain.RopstenConfig;
 import org.ethereum.facade.EthereumFactory;
-import org.ethereum.samples.BasicSample;
-import org.ethereum.samples.MordenSample;
-import protocol.impl.blockChain.*;
 import rest.api.Authentifier;
 import rest.factories.AuthentifierFactory;
 import rest.factories.RestServerFactory;
@@ -63,8 +60,9 @@ public class Application {
 		//new Application();
 		//Application.getInstance().runForTests(8081);
 		try {
-			SyncBlockChain synchro = new SyncBlockChain(new Config()) ;
-			synchro.run() ;
+			//SyncBlockChain synchro = new SyncBlockChain(new Config()) ;
+			//synchro.run() ;
+			EthereumFactory.createEthereum() ;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
