@@ -6,8 +6,18 @@ import controller.tools.LoggerUtilities;
 import model.syncManager.UserSyncManagerImpl;
 import network.api.Peer;
 import network.factories.PeerFactory;
+import org.ethereum.config.BlockchainConfig;
+import org.ethereum.config.DefaultConfig;
+import org.ethereum.config.SystemProperties;
 import org.ethereum.config.blockchain.RopstenConfig;
+import org.ethereum.config.net.RopstenNetConfig;
+import org.ethereum.facade.Ethereum;
 import org.ethereum.facade.EthereumFactory;
+import org.ethereum.samples.RopstenSample;
+import org.springframework.context.annotation.Bean;
+import protocol.impl.blockChain.BlockChainRopstenConfig;
+import protocol.impl.blockChain.Config;
+import protocol.impl.blockChain.SyncBlockChain;
 import rest.api.Authentifier;
 import rest.factories.AuthentifierFactory;
 import rest.factories.RestServerFactory;
@@ -57,24 +67,21 @@ public class Application {
 	}
 
 	public static void main(String[] args) {
-<<<<<<< HEAD
-		new Application();
-		Application.getInstance().runForTests(8081);
-
-		EthereumFactory.createEthereum(Config.class);
-=======
 		//new Application();
 		//Application.getInstance().runForTests(8081);
+
 		try {
-			//SyncBlockChain synchro = new SyncBlockChain(new Config()) ;
+			//SyncBlockChain synchro = new SyncBlockChain() ;
 			//synchro.run() ;
-			EthereumFactory.createEthereum() ;
+
+			Ethereum ethereum = EthereumFactory.createEthereum(Config.class);
+
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
->>>>>>> 23f4cb31f5d4ebb7b38463eb7b10c0ed9de3ca56
-
-	}S
+	}
 	
 	public void stop(){
 		peer.stop();

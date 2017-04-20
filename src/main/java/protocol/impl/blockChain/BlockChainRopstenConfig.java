@@ -7,6 +7,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
+import org.ethereum.config.BlockchainConfig;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.core.*;
 import org.ethereum.facade.Ethereum;
@@ -38,9 +39,9 @@ import java.util.*;
 /**
  * Created by methylhaine on 18/04/17.
  */
-public class BlockChainRopstenConfig extends BasicSample{
+public class BlockChainRopstenConfig {
 
-    protected abstract static class RopstenSampleConfig {
+  /*  public abstract static class RopstenSampleConfig {
         private final String config =
                 "peer.discovery = {" +
                         "    enabled = true \n" +
@@ -54,7 +55,9 @@ public class BlockChainRopstenConfig extends BasicSample{
                         "sync.enabled = true \n" +
                         "genesis = ropsten.json \n" +
                         "blockchain.config.name = 'ropsten' \n" +
-                        "database.dir = database-ropsten";
+                        "database.dir = database-ropstenSample";
+
+        public abstract BlockchainConfig sampleBean();
 
         @Bean
         public SystemProperties systemProperties() {
@@ -62,5 +65,5 @@ public class BlockChainRopstenConfig extends BasicSample{
             props.overrideParams(ConfigFactory.parseString(config.replaceAll("'", "\"")));
             return props;
         }
-    }
+    } */
 }
