@@ -1,13 +1,7 @@
 package protocol.impl.blockChain;
 
-import java.io.File;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.ethereum.config.BlockchainConfig;
-import org.ethereum.config.BlockchainNetConfig;
-import org.ethereum.config.net.RopstenNetConfig;
-import org.ethereum.config.net.TestNetConfig;
 import org.ethereum.facade.Ethereum;
 import org.ethereum.config.SystemProperties ;
 import org.ethereum.facade.EthereumFactory;
@@ -19,11 +13,11 @@ import org.ethereum.listener.EthereumListenerAdapter;
 public class SyncBlockChain implements Runnable {
 
     private Ethereum ethereum = null ;
-    private Config config = null ;
+    private Class config ;
     private AtomicBoolean isSyncDone = new AtomicBoolean(false) ;
 
     public SyncBlockChain() {} ;
-    public SyncBlockChain(Config conf) {
+    public SyncBlockChain(Class conf) {
         config = conf ;
     }
 
@@ -39,7 +33,7 @@ public class SyncBlockChain implements Runnable {
             SystemProperties.getDefault().setDiscoveryEnabled(false);
         }
 
-        ethereum = EthereumFactory.createEthereum() ;
+        ethereum = EthereumFactory.createEthereum(config) ;
 
         ethereum.addListener(new EthereumListenerAdapter() {
             //true when BlockChain is Sync

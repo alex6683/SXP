@@ -30,4 +30,3 @@ derby.log
 out
 /database-*
 /database/
-src/main/java/controller/Application.java

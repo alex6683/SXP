@@ -70,17 +70,8 @@ public class Application {
 		//new Application();
 		//Application.getInstance().runForTests(8081);
 
-		try {
-			//SyncBlockChain synchro = new SyncBlockChain() ;
-			//synchro.run() ;
+		new SyncBlockChain(Config.class).run() ;
 
-			Ethereum ethereum = EthereumFactory.createEthereum(Config.class);
-
-
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void stop(){

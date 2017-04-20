@@ -29,7 +29,5 @@ public class DeployContract implements Runnable {
 
             }
         }
-
-
     }
 }
