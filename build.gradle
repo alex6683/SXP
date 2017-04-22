@@ -120,13 +120,13 @@ targetCompatibility = 1.7
 repositories {
     mavenCentral()
     maven {
-        url 'https://oss.jfrog.org/libs-snapshot'
-    }
-    maven {
-        url 'http://www.janus-project.org/maven'
+        url 'https://oss.sonatype.org/content/repositories/comkenaijxse-014' //'http://www.janus-project.org/maven'
     }
     maven {
         url 'https://dl.bintray.com/ethereum/maven'
+    }
+    maven {
+        url 'http://bitbucket.org/iainmcgin/netty-httptunnel/raw/tip/repo'
     }
 }
 dependencies {
@@ -135,7 +135,10 @@ dependencies {
 
     compile 'com.google.guava:guava:19.0'
 
+    /////////
     compile 'com.kenai.jxse:jxse:2.7'
+    compile 'org.jboss.netty:httptunnel:0.92'
+    /////////
 
     compile 'javax:javaee-api:7.0'
     compile 'javax.el:javax.el-api:2.2.4'

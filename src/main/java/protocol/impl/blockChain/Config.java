@@ -24,6 +24,7 @@ public class Config {
                     "blockchain.config.name = 'ropsten' \n" +
                     "database.dir = database-ropsten";
 
+    //Créé deux affichage de config
     @Bean
     public SystemProperties systemProperties() {
         SystemProperties props = new SystemProperties();
@@ -31,6 +32,8 @@ public class Config {
         return props;
     }
 
+
+    //A voir
     private static class ConfigTest {
         @Bean
         public Config basicSample() {

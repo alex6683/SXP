@@ -12,17 +12,21 @@ import org.ethereum.listener.EthereumListenerAdapter;
  */
 public class SyncBlockChain implements Runnable {
 
-    private Ethereum ethereum = null ;
-    private Class config ;
-    private AtomicBoolean isSyncDone = new AtomicBoolean(false) ;
+    private Ethereum ethereum = null;
+    private Class config;
+    private AtomicBoolean isSyncDone = new AtomicBoolean(false);
 
-    public SyncBlockChain() {} ;
+    public SyncBlockChain() {
+    }
+
+    ;
+
     public SyncBlockChain(Class conf) {
-        config = conf ;
+        config = conf;
     }
 
     public boolean getIsSyncDone() {
-        return isSyncDone.get() ;
+        return isSyncDone.get();
     }
 
     @Override
@@ -33,7 +37,7 @@ public class SyncBlockChain implements Runnable {
             SystemProperties.getDefault().setDiscoveryEnabled(false);
         }
 
-        ethereum = EthereumFactory.createEthereum(config) ;
+        ethereum = EthereumFactory.createEthereum(config);
 
         ethereum.addListener(new EthereumListenerAdapter() {
             //true when BlockChain is Sync
@@ -44,3 +48,5 @@ public class SyncBlockChain implements Runnable {
 
     }
 }
+
+
