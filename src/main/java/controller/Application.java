@@ -6,8 +6,7 @@ import controller.tools.LoggerUtilities;
 import model.syncManager.UserSyncManagerImpl;
 import network.api.Peer;
 import network.factories.PeerFactory;
-import protocol.impl.blockChain.Config;
-import protocol.impl.blockChain.SyncBlockChain;
+import protocol.impl.blockChain.*;
 import rest.api.Authentifier;
 import rest.factories.AuthentifierFactory;
 import rest.factories.RestServerFactory;
@@ -60,8 +59,10 @@ public class Application {
 		//new Application();
 		//Application.getInstance().runForTests(8081);
 
-		new SyncBlockChain(Config.class).run() ;
+		SyncBlockChain sync = new SyncBlockChain(Config.class) ;
 
+		DeployContract sendTx = new DeployContract(sync, new EthereumContract(SolidityContract.soliditySrc)) ;
+		sendTx.run() ;
 	}
 	
 	public void stop(){

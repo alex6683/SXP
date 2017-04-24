@@ -23,7 +23,6 @@ public class SyncBlockChain implements Runnable {
     public boolean getIsSyncDone() {
         return isSyncDone.get();
     }
-
     public Ethereum getEthereum() {
         return ethereum;
     }
@@ -39,13 +38,10 @@ public class SyncBlockChain implements Runnable {
         ethereum = EthereumFactory.createEthereum(config);
 
         ethereum.addListener(new EthereumListenerAdapter() {
-            //true when BlockChain is Sync
-            public void onSyncDone() {
-                isSyncDone.set(true);
+            @Override
+            public void onSyncDone(SyncState state) {
+                isSyncDone.set(true) ;
             }
         });
-
     }
 }
-
-

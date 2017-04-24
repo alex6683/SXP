@@ -22,6 +22,13 @@ public class EthereumContract {
     private CompilationResult.ContractMetadata contractMetadata ;
     private byte[] contractAdr ;
 
+
+    public EthereumContract() {
+        contractSrc = new SolidityContract().soliditySrc ;
+        contractMetadata = null ;
+        contractAdr = null ;
+    }
+
     public EthereumContract(String src) {
         contractSrc = src ;
         contractMetadata = null ;
@@ -32,12 +39,13 @@ public class EthereumContract {
     public String getContractSrc() {
         return contractSrc;
     }
-    public CompilationResult.ContractMetadata getContractABI() {
+    public CompilationResult.ContractMetadata getContractMetadata() {
         return contractMetadata;
     }
     public byte[] getContractAdr() {
         return contractAdr;
     }
+    public ECKey getSender() { return sender ; }
     ///////////
 
     //SETTERS//

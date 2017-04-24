@@ -1,15 +1,17 @@
 package protocol.impl.blockChain;
 
+import org.ethereum.core.Block;
 import org.ethereum.core.Transaction;
 import org.ethereum.core.TransactionReceipt;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.db.ByteArrayWrapper;
-import org.ethereum.facade.Ethereum;
+import org.ethereum.listener.EthereumListenerAdapter;
 import org.ethereum.util.ByteUtil;
 
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,27 +19,27 @@ import java.util.Map;
  */
 public abstract class SendTransaction {
 
-    private Ethereum ethereum ;
-    private Map<ByteArrayWrapper, TransactionReceipt> txWaiters =
+    protected SyncBlockChain sync ;
+    protected Map<ByteArrayWrapper, TransactionReceipt> txWaiters =
             Collections.synchronizedMap(new HashMap<ByteArrayWrapper, TransactionReceipt>());
 
-    public SendTransaction(Ethereum eth) {
-        ethereum = eth ;
+    public SendTransaction(SyncBlockChain ethereum) {
+        sync = ethereum ;
     }
 
     public TransactionReceipt sendTxAndWait(ECKey senderAddress, byte[] receiveAddress, byte[] data) throws Exception {
-        BigInteger nonce = ethereum.getRepository().getNonce(senderAddress.getAddress());
+        BigInteger nonce = sync.getEthereum().getRepository().getNonce(senderAddress.getAddress());
         Transaction tx = new Transaction(
                 ByteUtil.bigIntegerToBytes(nonce),
-                ByteUtil.longToBytesNoLeadZeroes(ethereum.getGasPrice()),
+                ByteUtil.longToBytesNoLeadZeroes(sync.getEthereum().getGasPrice()),
                 ByteUtil.longToBytesNoLeadZeroes(3_000_000),
                 receiveAddress,
                 ByteUtil.ZERO_BYTE_ARRAY,
                 data,
-                ethereum.getChainIdForNextBlock());
+                sync.getEthereum().getChainIdForNextBlock());
         tx.sign(senderAddress);
 
-        ethereum.submitTransaction(tx);
+        sync.getEthereum().submitTransaction(tx);
 
         return waitForTx(tx.getHash());
     }
@@ -45,7 +47,7 @@ public abstract class SendTransaction {
     private TransactionReceipt waitForTx(byte[] txHash) throws InterruptedException {
         ByteArrayWrapper txHashW = new ByteArrayWrapper(txHash);
         txWaiters.put(txHashW, null);
-        long startBlock = ethereum.getBlockchain().getBestBlock().getNumber();
+        long startBlock = sync.getEthereum().getBlockchain().getBestBlock().getNumber();
 
         while(true) {
             TransactionReceipt receipt = txWaiters.get(txHashW);
@@ -53,13 +55,13 @@ public abstract class SendTransaction {
                 return receipt;
             }
             else {
-                long curBlock = ethereum.getBlockchain().getBestBlock().getNumber();
+                long curBlock = sync.getEthereum().getBlockchain().getBestBlock().getNumber();
                 if (curBlock > startBlock + 16) {
-                    throw new RuntimeException("The transaction was not included during last 16 blocks: " + txHashW.toString().substring(0,8)) ;
+                    throw new RuntimeException("\n\n\nThe transaction was not included during last 16 blocks: " + txHashW.toString().substring(0,8)) ;
                 }
                 else {
-                    System.out.println("Waiting for block with transaction 0x" + txHashW.toString().substring(0,8) +
-                            " included (" + (curBlock - startBlock) + " blocks received so far) ...") ;
+                    System.out.println("\n\n\nWaiting for block with transaction 0x" + txHashW.toString().substring(0,8) +
+                            " included (" + (curBlock - startBlock) + " blocks received so far) ...\n\n\n") ;
                 }
             }
             synchronized (this) {

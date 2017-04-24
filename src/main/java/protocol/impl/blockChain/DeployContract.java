@@ -1,5 +1,14 @@
 package protocol.impl.blockChain;
 
+import org.ethereum.core.Block;
+import org.ethereum.core.TransactionReceipt;
+import org.ethereum.db.ByteArrayWrapper;
+import org.ethereum.listener.EthereumListenerAdapter;
+import org.spongycastle.util.encoders.Hex;
+
+import java.util.List;
+import java.util.Map;
+
 import static java.lang.Thread.sleep;
 
 /**
@@ -7,17 +16,36 @@ import static java.lang.Thread.sleep;
  */
 public class DeployContract extends SendTransaction implements Runnable {
     private EthereumContract contract ;
-    private SyncBlockChain sync ;
 
     public DeployContract(SyncBlockChain sync, EthereumContract contract) {
-        super(sync.getEthereum()) ;
-        this.sync = sync ;
+        super(sync) ;
         this.contract = contract ;
+    }
+
+    public Map<ByteArrayWrapper, TransactionReceipt> getTxWaiters() {
+        return super.txWaiters ;
     }
 
     @Override
     public void run() {
         sync.run() ;
+
+        sync.getEthereum().addListener(new EthereumListenerAdapter() {
+            //Check for each new Block if current Transaction is included in it
+            @Override
+            public void onBlock(Block block, List<TransactionReceipt> receipts) {
+                for (TransactionReceipt receipt : receipts) {
+                    ByteArrayWrapper txHashW = new ByteArrayWrapper(receipt.getTransaction().getHash());
+                    if (txWaiters.containsKey(txHashW)) {
+                        txWaiters.put(txHashW, receipt);
+                        synchronized (this) {
+                            notifyAll();
+                        }
+                    }
+                }
+            }
+        });
+
         while(true) {
             if (!sync.getIsSyncDone()) {
                 try {
@@ -27,7 +55,24 @@ public class DeployContract extends SendTransaction implements Runnable {
                 }
             }
             else {
-                
+                try {
+                    contract.compileData(contract.compileResult()) ;
+                    TransactionReceipt receipt = sendTxAndWait(
+                            contract.getSender(),
+                            null,
+                            Hex.decode(contract.getContractMetadata().bin)
+                    ) ;
+                    contract.setContractAdr(receipt.getTransaction().getContractAddress()) ;
+                    System.out.println("\n\nContract Deployed !! : " + Hex.toHexString(contract.getContractAdr()) + "\n\n") ;
+                } catch( Exception e) { e.printStackTrace() ; }
+                try {
+                    sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                //Exit when execution Successful
+                sync.getEthereum().close();
+                System.exit(13);
             }
         }
     }
