@@ -16,11 +16,6 @@ public class SyncBlockChain implements Runnable {
     private Class config;
     private AtomicBoolean isSyncDone = new AtomicBoolean(false);
 
-    public SyncBlockChain() {
-    }
-
-    ;
-
     public SyncBlockChain(Class conf) {
         config = conf;
     }
