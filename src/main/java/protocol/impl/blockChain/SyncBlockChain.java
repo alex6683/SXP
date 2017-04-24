@@ -24,6 +24,10 @@ public class SyncBlockChain implements Runnable {
         return isSyncDone.get();
     }
 
+    public Ethereum getEthereum() {
+        return ethereum;
+    }
+
     @Override
     public void run() {
 
