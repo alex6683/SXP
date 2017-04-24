@@ -1,17 +1,14 @@
 package protocol.impl.blockChain;
 
-import org.ethereum.core.Block;
 import org.ethereum.core.Transaction;
 import org.ethereum.core.TransactionReceipt;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.db.ByteArrayWrapper;
-import org.ethereum.listener.EthereumListenerAdapter;
 import org.ethereum.util.ByteUtil;
 
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

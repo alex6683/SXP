@@ -22,10 +22,6 @@ public class DeployContract extends SendTransaction implements Runnable {
         this.contract = contract ;
     }
 
-    public Map<ByteArrayWrapper, TransactionReceipt> getTxWaiters() {
-        return super.txWaiters ;
-    }
-
     @Override
     public void run() {
         sync.run() ;
