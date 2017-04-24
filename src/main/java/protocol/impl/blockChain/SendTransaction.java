@@ -21,6 +21,10 @@ public abstract class SendTransaction {
     private Map<ByteArrayWrapper, TransactionReceipt> txWaiters =
             Collections.synchronizedMap(new HashMap<ByteArrayWrapper, TransactionReceipt>());
 
+    public SendTransaction(Ethereum eth) {
+        ethereum = eth ;
+    }
+
     public TransactionReceipt sendTxAndWait(ECKey senderAddress, byte[] receiveAddress, byte[] data) throws Exception {
         BigInteger nonce = ethereum.getRepository().getNonce(senderAddress.getAddress());
         Transaction tx = new Transaction(
@@ -38,25 +42,29 @@ public abstract class SendTransaction {
         return waitForTx(tx.getHash());
     }
 
-    public TransactionReceipt waitForTx(byte[] txHash) throws Exception {
+    private TransactionReceipt waitForTx(byte[] txHash) throws InterruptedException {
         ByteArrayWrapper txHashW = new ByteArrayWrapper(txHash);
         txWaiters.put(txHashW, null);
         long startBlock = ethereum.getBlockchain().getBestBlock().getNumber();
+
         while(true) {
             TransactionReceipt receipt = txWaiters.get(txHashW);
             if (receipt != null) {
                 return receipt;
-            } else {
+            }
+            else {
                 long curBlock = ethereum.getBlockchain().getBestBlock().getNumber();
                 if (curBlock > startBlock + 16) {
-                    throw new RuntimeException("The transaction was not included during last 16 blocks: " + txHashW.toString().substring(0,8));
-                } else {
+                    throw new RuntimeException("The transaction was not included during last 16 blocks: " + txHashW.toString().substring(0,8)) ;
+                }
+                else {
                     System.out.println("Waiting for block with transaction 0x" + txHashW.toString().substring(0,8) +
-                            " included (" + (curBlock - startBlock) + " blocks received so far) ...");
+                            " included (" + (curBlock - startBlock) + " blocks received so far) ...") ;
                 }
             }
-            synchronized (ethereum.getBlockchain().getBestBlock()) {
-                ethereum.getBlockchain().getBestBlock().wait(20000);
+            synchronized (this) {
+                wait(20000);
             }
-        } }
+        }
+    }
 }

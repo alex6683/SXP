@@ -5,11 +5,12 @@ import static java.lang.Thread.sleep;
 /**
  * Created by alex on 19/04/17.
  */
-public class DeployContract implements Runnable {
+public class DeployContract extends SendTransaction implements Runnable {
     private EthereumContract contract ;
     private SyncBlockChain sync ;
 
     public DeployContract(SyncBlockChain sync, EthereumContract contract) {
+        super(sync.getEthereum()) ;
         this.sync = sync ;
         this.contract = contract ;
     }
@@ -26,7 +27,7 @@ public class DeployContract implements Runnable {
                 }
             }
             else {
-
+                
             }
         }
     }
