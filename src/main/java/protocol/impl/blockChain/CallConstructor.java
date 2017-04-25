@@ -1,26 +1,19 @@
 package protocol.impl.blockChain;
 
-import org.ethereum.core.Block;
-import org.ethereum.core.TransactionReceipt;
-import org.ethereum.db.ByteArrayWrapper;
-import org.ethereum.listener.EthereumListenerAdapter;
-
-import java.util.List;
-
 import static java.lang.Thread.sleep;
 
 /**
  * Created by alex on 25/04/17.
  */
-class CallContructor extends ContractCallImpl implements Runnable {
+public class CallConstructor extends ContractCallImpl implements Runnable {
 
     String part1 ;
     String part2 ;
     String item1 ;
     String item2 ;
 
-    public CallContructor(SyncBlockChain ethereum, EthereumContract contract,
-                          String part1, String part2, String item1, String item2) {
+    public CallConstructor(SyncBlockChain ethereum, EthereumContract contract,
+                           String part1, String part2, String item1, String item2) {
         super(ethereum, contract);
         this.item1 = item1 ;
         this.item2 = item2 ;
@@ -57,11 +50,12 @@ class CallContructor extends ContractCallImpl implements Runnable {
                 }
             }
             else {
+
                 try {
-
                     super.contractBlockChainConstructor(part1, part2, item1, item2);
-
-                } catch( Exception e) { e.printStackTrace() ; }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 try {
                     sleep(5000);
                 } catch (InterruptedException e) {
