@@ -11,6 +11,7 @@ import rest.api.Authentifier;
 import rest.factories.AuthentifierFactory;
 import rest.factories.RestServerFactory;
 
+
 /**
  * Main class
  * {@link Application} is a singleton
@@ -47,6 +48,7 @@ public class Application {
 		umg.close();
 		umg = null;
 		try {
+
 			setPeer(PeerFactory.createDefaultAndStartPeerForTest());
 			setAuth(AuthentifierFactory.createDefaultAuthentifier());
 			RestServerFactory.createAndStartDefaultRestServer(restPort);
@@ -60,7 +62,7 @@ public class Application {
 		//Application.getInstance().runForTests(8081);
 
 		SyncBlockChain sync = new SyncBlockChain(Config.class) ;
-
+		
 		sync.run() ;
 
 		EthereumContract contract = new EthereumContract(SolidityContract.soliditySrc) ;
@@ -79,7 +81,6 @@ public class Application {
 
 		Thread.currentThread().sleep(5000);
 		sync.closeSync();
-
 	}
 	
 	public void stop(){
