@@ -55,14 +55,31 @@ public class Application {
 		}		
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		//new Application();
 		//Application.getInstance().runForTests(8081);
 
 		SyncBlockChain sync = new SyncBlockChain(Config.class) ;
 
-		DeployContract sendTx = new DeployContract(sync, new EthereumContract(SolidityContract.soliditySrc)) ;
-		sendTx.run() ;
+		sync.run() ;
+
+		EthereumContract contract = new EthereumContract(SolidityContract.soliditySrc) ;
+
+		new DeployContract(sync, contract).run() ;
+
+		new CallConstructor(sync, contract,
+				"49a337147d9249ffe437a780fd6ba1ffd3e2bdad",
+				"0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f",
+				"velo",
+				"carotte"
+		).run() ;
+
+
+		System.out.println("\n\nContract MODIFIED with Constructor !\n\n");
+
+		Thread.currentThread().sleep(5000);
+		sync.closeSync();
+
 	}
 	
 	public void stop(){

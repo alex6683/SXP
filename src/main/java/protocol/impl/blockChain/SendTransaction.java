@@ -27,10 +27,14 @@ public abstract class SendTransaction {
     public TransactionReceipt sendTxAndWait(ECKey senderAddress, byte[] receiveAddress, byte[] data) throws Exception {
         BigInteger nonce = sync.getEthereum().getRepository().getNonce(senderAddress.getAddress());
         Transaction tx = new Transaction(
+                //Nonce
                 ByteUtil.bigIntegerToBytes(nonce),
+                //GasPrice
                 ByteUtil.longToBytesNoLeadZeroes(sync.getEthereum().getGasPrice()),
+                //GasLimit
                 ByteUtil.longToBytesNoLeadZeroes(3_000_000),
                 receiveAddress,
+                //value
                 ByteUtil.ZERO_BYTE_ARRAY,
                 data,
                 sync.getEthereum().getChainIdForNextBlock());

@@ -7,7 +7,6 @@ import org.ethereum.listener.EthereumListenerAdapter;
 import org.spongycastle.util.encoders.Hex;
 
 import java.util.List;
-import java.util.Map;
 
 import static java.lang.Thread.sleep;
 
@@ -24,7 +23,7 @@ public class DeployContract extends SendTransaction implements Runnable {
 
     @Override
     public void run() {
-        sync.run() ;
+        //sync.run() ;
         sync.getEthereum().addListener(new EthereumListenerAdapter() {
             //Check for each new Block if current Transaction is included in it
             @Override
@@ -58,16 +57,15 @@ public class DeployContract extends SendTransaction implements Runnable {
                             Hex.decode(contract.getContractMetadata().bin)
                     ) ;
                     contract.setContractAdr(receipt.getTransaction().getContractAddress()) ;
-                    System.out.println("\n\nContract Deployed !! : " + Hex.toHexString(contract.getContractAdr()) + "\n\n") ;
+                    if(contract.isDeployed())
+                        System.out.println("\n\nContract Deployed !! : " + Hex.toHexString(contract.getContractAdr()) + "\n\n") ;
                 } catch( Exception e) { e.printStackTrace() ; }
                 try {
                     sleep(5000);
+                    break ;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                //Exit when execution Successful
-                sync.getEthereum().close();
-                System.exit(13);
             }
         }
     }

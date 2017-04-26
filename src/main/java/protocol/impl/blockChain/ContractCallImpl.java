@@ -23,10 +23,11 @@ public class ContractCallImpl extends SendTransaction {
     public void contractBlockChainConstructor(String user1, String user2, String itemUser1, String itemUser2) throws Exception {
         CallTransaction.Function Sign = contractCall.getConstructor() ;
         byte[] functionCallBytes = Sign.encode(
-                user1,
+                /*user1,
                 user2,
                 itemUser1,
-                itemUser2);
+                itemUser2*/
+        );
         TransactionReceipt receipt1 = sendTxAndWait(contract.getSender(), contract.getContractAdr(), functionCallBytes);
     }
 

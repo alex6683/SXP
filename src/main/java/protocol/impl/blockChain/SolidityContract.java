@@ -7,6 +7,14 @@ public class SolidityContract {
 
     public static String soliditySrc = "contract Signature {" +
 
+                    "function Signature(){ }" +
+
+                    "  }" ;
+
+
+
+            /*"contract Signature {" +
+
             "  struct Contract {" +
             "    string itemU1;" +
             "    string itemU2;" +
@@ -54,5 +62,6 @@ public class SolidityContract {
             "    signedUser2 = true;" +
             "  }" +
 
-            "}" ;
+            "}" ;*/
+
 }
