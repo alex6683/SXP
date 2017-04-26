@@ -33,7 +33,7 @@ public class CallConstructor extends ContractCallImpl implements Runnable {
     @Override
     public void run() {
         //sync.run() ;
-        /*sync.getEthereum().addListener(new EthereumListenerAdapter() {
+        sync.getEthereum().addListener(new EthereumListenerAdapter() {
             //Check for each new Block if current Transaction is included in it
             @Override
             public void onBlock(Block block, List<TransactionReceipt> receipts) {
@@ -47,7 +47,7 @@ public class CallConstructor extends ContractCallImpl implements Runnable {
                     }
                 }
             }
-        });*/
+        });
         while(true) {
             if (!sync.getIsSyncDone()) {
                 try {
