@@ -7,9 +7,18 @@ public class SolidityContract {
 
     public static String soliditySrc = "contract Signature {" +
 
-                    "function Signature(){ }" +
+                    "   function Signature(){ }" +
+                    "   bool public signedUser1 = false ; " +
 
-                    "  }" ;
+                    "   function getU1() constant returns (bool) { " +
+                    "       return signedUser1 ; " +
+                    "   } " +
+
+                    "   function signatureUser1() { " +
+                    "       signedUser1 = true ; " +
+                    "   } " +
+
+                    "} " ;
 
 
 
