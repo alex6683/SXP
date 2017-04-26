@@ -57,7 +57,6 @@ public class CallConstructor extends ContractCallImpl implements Runnable {
                 }
             }
             else {
-
                 try {
                     super.contractBlockChainConstructor(part1, part2, item1, item2);
                 } catch (Exception e) {
