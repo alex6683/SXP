@@ -16,7 +16,13 @@ public class BlockChainConfigTest {
             new Application();
             Application.getInstance().runForTests(8081);
         }
-    }
 
-    Config configTest = new Config();
+        System.out.println("Configuration actuelle de la BlockChain :");
+
+        Config configTest = new Config();
+
+        System.out.println();
+        System.out.print(configTest.getConfiguration());
+        System.out.println();
+    }
 }

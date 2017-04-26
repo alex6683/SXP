@@ -47,6 +47,7 @@ public class Application {
 		umg.close();
 		umg = null;
 		try {
+
 			setPeer(PeerFactory.createDefaultAndStartPeerForTest());
 			setAuth(AuthentifierFactory.createDefaultAuthentifier());
 			RestServerFactory.createAndStartDefaultRestServer(restPort);
@@ -60,9 +61,10 @@ public class Application {
 		//Application.getInstance().runForTests(8081);
 
 		SyncBlockChain sync = new SyncBlockChain(Config.class) ;
+		sync.run();
 
-		DeployContract sendTx = new DeployContract(sync, new EthereumContract(SolidityContract.soliditySrc)) ;
-		sendTx.run() ;
+		//DeployContract sendTx = new DeployContract(sync, new EthereumContract(SolidityContract.soliditySrc)) ;
+		//sendTx.run() ;
 	}
 	
 	public void stop(){

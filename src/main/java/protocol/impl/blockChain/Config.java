@@ -13,8 +13,9 @@ public class Config {
             "peer.discovery = {" +
                     "    enabled = true \n" +
                     "    ip.list = [" +
-                    "        '94.242.229.4:40404'," +
-                    "        '94.242.229.203:30303'" +
+                    "        '54.94.239.50:30303'," +
+                    "        '52.16.188.185:30303'," +
+                    "        '52.74.57.123:30303',"  +
                     "    ]" +
                     "} \n" +
                     "peer.p2p.eip8 = true \n" +
@@ -24,7 +25,11 @@ public class Config {
                     "blockchain.config.name = 'ropsten' \n" +
                     "database.dir = database-ropsten";
 
-    //Créé deux affichage de config
+    public String getConfiguration(){
+        return this.configuration;
+    }
+
+    //Crée deux affichages de config
     @Bean
     public SystemProperties systemProperties() {
         SystemProperties props = new SystemProperties();
