@@ -90,7 +90,7 @@ public class Application {
 
 		//System.out.println("\n\nContract MODIFIED with Constructor !\n\n");
 
-		Thread.currentThread().sleep(5000);
+		//Thread.currentThread().sleep(5000);
 		//sync.closeSync();
 	}
 	
