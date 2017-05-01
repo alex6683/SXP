@@ -23,8 +23,7 @@ import model.entity.ContractEntity;
 public abstract class EstablisherContract<T, Key extends AsymKey<T>, Sign, _Signer extends Signer<Sign, Key>> implements Hashable{
 	 
 	protected ContractEntity contract;
-	
-	
+
 	/* 
 	 * Default getters and setters
 	 */
