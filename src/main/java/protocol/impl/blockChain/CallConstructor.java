@@ -20,13 +20,13 @@ public class CallConstructor extends ContractCallImpl implements Runnable {
     private String item2 ;
 
     public CallConstructor(SyncBlockChain ethereum, EthereumContract contract,
-                           String part1, String part2, String item1, String item2) {
+                           String part1, String part2) {
 
         super(ethereum, contract);
         this.part1 = part1 ;
         this.part2 = part2 ;
-        this.item1 = item1 ;
-        this.item2 = item2 ;
+        // this.item1 = item1 ;
+        // this.item2 = item2 ;
     }
 
 
@@ -58,7 +58,22 @@ public class CallConstructor extends ContractCallImpl implements Runnable {
             }
             else {
                 try {
-                    super.contractBlockChainConstructor(part1, part2, item1, item2);
+                    System.out.println("////////////// INCOMING /////////////////");
+                    super.callFunc("owned");
+                    System.out.println("////////////// OWNED    /////////////////");
+                    super.callFunc("transferOwnership", "49a337147d9249ffe437a780fd6ba1ffd3e2bdad");
+                    System.out.println("////////////// TRANSFER /////////////////");
+                    super.callFunc("initMember1");
+                    System.out.println("////////////// INIT1    /////////////////");
+                    super.callFunc("initMember2");
+                    System.out.println("////////////// INIT2    /////////////////");
+                    super.callFunc("signature1");
+                    System.out.println("////////////// SIGN1    /////////////////");
+                    super.callFunc("signature2");
+                    System.out.println("////////////// SIGN2    /////////////////");
+                    Object res = super.getReturnContract("launchTrade");
+                    System.out.println("CONTRAT VALIDE : " + res);
+                    System.out.println("////////////// DONE     /////////////////");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

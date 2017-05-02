@@ -49,7 +49,7 @@ public class CallSetSign extends ContractCallImpl implements Runnable {
             else {
 
                 try {
-                    super.callFunctNoArgs(function);
+                    super.callFunc(function);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

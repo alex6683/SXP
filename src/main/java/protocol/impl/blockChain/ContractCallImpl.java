@@ -31,10 +31,15 @@ public class ContractCallImpl extends SendTransaction {
         TransactionReceipt receipt1 = sendTxAndWait(contract.getSender(), contract.getContractAdr(), functionCallBytes);
     }
 
-    //Call function with No Args of our contract
-    public void callFunctNoArgs(String functionName) throws Exception {
-        TransactionReceipt receipt2 = sendTxAndWait(contract.getSender(), contract.getContractAdr(),
-                contractCall.getByName(functionName).encode());
+    //Call function of our contract
+    public void callFunc(String func, Object ...args) throws Exception {
+        CallTransaction.Function fct = contractCall.getByName(func);
+        byte[] functionCallBytes = fct.encode(args);
+        TransactionReceipt receipt2 = sendTxAndWait(contract.getSender(), contract.getContractAdr(), functionCallBytes);
+        if (!receipt2.isSuccessful()) {
+            System.err.println("Some troubles creating a contract: " + receipt2.getError());
+            return;
+        }
     }
 
     //Return value of get function of our contract

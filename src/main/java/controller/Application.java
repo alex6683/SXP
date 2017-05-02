@@ -69,14 +69,12 @@ public class Application {
 
 		new DeployContract(sync, contract).run() ;
 
-		/*new CallConstructor(sync, contract,
+		new CallConstructor(sync, contract,
 				"49a337147d9249ffe437a780fd6ba1ffd3e2bdad",
-				"0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f",
-				"velo",
-				"carotte"
-		).run() ;*/
+				"0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f"
+				).run() ;
 
-		CallGetSign call = new CallGetSign(sync, contract, "getU1") ;
+		/*CallGetSign call = new CallGetSign(sync, contract, "getU1") ;
 		call.run();
 		Object obj = call.getSign() ;
 		System.out.println("\n\nSIGN = " + obj +"\n\n") ;
@@ -85,13 +83,13 @@ public class Application {
 
 		call.run();
 		obj = call.getSign() ;
-		System.out.println("\n\nSIGN = " + obj +"\n\n") ;
+		System.out.println("\n\nSIGN = " + obj +"\n\n") ;*/
 
 
 		//System.out.println("\n\nContract MODIFIED with Constructor !\n\n");
 
 		Thread.currentThread().sleep(5000);
-		//sync.closeSync();
+		sync.closeSync();
 	}
 	
 	public void stop(){
