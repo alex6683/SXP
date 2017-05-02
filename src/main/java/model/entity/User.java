@@ -47,8 +47,12 @@ public class User {
 	@NotNull
 	@XmlElement(name="keys")
 	private ElGamalKey keys;
-	
-	
+
+	@NotNull
+	@XmlElement(name="EthKeys")
+	private EthereumKey EthKeys;
+
+
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -96,4 +100,8 @@ public class User {
 	public void setKey(ElGamalKey key) {
 		this.keys = key;
 	}
+
+	public EthereumKey getEthKeys() { return EthKeys ; }
+
+	public void setEthKeys(EthereumKey ethKeys) { EthKeys = ethKeys ; }
 }
