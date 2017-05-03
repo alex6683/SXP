@@ -16,9 +16,16 @@ public class CallSetSign extends ContractCallImpl implements Runnable {
 
     private String function ;
 
+    private TransactionReceipt tx ;
+
     public CallSetSign(SyncBlockChain ethereum, EthereumContract contract, String function) {
         super(ethereum, contract);
         this.function = function ;
+    }
+
+
+    public TransactionReceipt getTx() {
+        return tx;
     }
 
     @Override
@@ -49,7 +56,7 @@ public class CallSetSign extends ContractCallImpl implements Runnable {
             else {
 
                 try {
-                    super.callFunctNoArgs(function);
+                    tx = super.callFunctNoArgs(function);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

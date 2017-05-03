@@ -1,9 +1,13 @@
 package protocol.impl.blockChain;
 
+import model.entity.ContractEntity;
+
 /**
  * Created by alex on 24/04/17.
  */
 public class SolidityContract {
+
+    private ContractEntity entity ;
 
     public static String soliditySrc = "contract Signature {" +
 

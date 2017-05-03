@@ -25,12 +25,6 @@ public class EthereumKey implements AsymKey<BigInteger> {
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     private BigInteger publicKey;
 
-    @NotNull
-    @XmlElement(name="p")
-//	@JsonSerialize(using=controller.tools.BigIntegerSerializer.class)
-    @JsonFormat(shape=JsonFormat.Shape.STRING)
-    private BigInteger p;
-
     @Override
     public BigInteger getPublicKey() {
         return publicKey;
@@ -38,6 +32,11 @@ public class EthereumKey implements AsymKey<BigInteger> {
     @Override
     public BigInteger getPrivateKey() {
         return privateKey;
+    }
+
+    @Override
+    public BigInteger getParam(String p) {
+        return null;
     }
 
     @Override
@@ -49,10 +48,5 @@ public class EthereumKey implements AsymKey<BigInteger> {
         privateKey = pk;
     }
 
-    public BigInteger getParam(String param) {
-        switch(param) {
-            case "p": return p;
-            default: throw new RuntimeException("param " + param + " undefined");
-        }
-    }
+
 }

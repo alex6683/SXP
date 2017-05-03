@@ -8,14 +8,14 @@ import static java.lang.Thread.sleep;
 public class CallGetSign extends ContractCallImpl implements Runnable {
 
     private String function ;
-    private Object sign ;
+    private boolean sign ;
 
     public CallGetSign(SyncBlockChain ethereum, EthereumContract contract, String function) {
         super(ethereum, contract);
         this.function = function ;
     }
 
-    public Object getSign() {
+    public boolean getSign() {
         return sign;
     }
 
@@ -31,7 +31,7 @@ public class CallGetSign extends ContractCallImpl implements Runnable {
             }
             else {
                 try {
-                    sign = super.getReturnContract(function);
+                    sign = (Boolean) super.getReturnContract(function);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

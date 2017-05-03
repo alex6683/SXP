@@ -29,7 +29,7 @@ public class Config {
         return this.configuration;
     }
 
-    //Crée deux affichages de config
+    //Warning : Crée deux affichages de config
     @Bean
     public SystemProperties systemProperties() {
         SystemProperties props = new SystemProperties();

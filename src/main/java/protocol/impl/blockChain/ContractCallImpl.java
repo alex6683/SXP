@@ -32,9 +32,10 @@ public class ContractCallImpl extends SendTransaction {
     }
 
     //Call function with No Args of our contract
-    public void callFunctNoArgs(String functionName) throws Exception {
+    public TransactionReceipt callFunctNoArgs(String functionName) throws Exception {
         TransactionReceipt receipt2 = sendTxAndWait(contract.getSender(), contract.getContractAdr(),
                 contractCall.getByName(functionName).encode());
+        return receipt2 ;
     }
 
     //Return value of get function of our contract
