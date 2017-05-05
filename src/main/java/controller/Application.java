@@ -3,6 +3,7 @@ package controller;
 import java.util.Properties;
 
 import controller.tools.LoggerUtilities;
+import model.entity.ContractEntity;
 import model.syncManager.UserSyncManagerImpl;
 import network.api.Peer;
 import network.factories.PeerFactory;
@@ -62,36 +63,15 @@ public class Application {
 		//Application.getInstance().runForTests(8081);
 
 		SyncBlockChain sync = new SyncBlockChain(Config.class) ;
-		
-		sync.run() ;
 
-		EthereumContract contract = new EthereumContract(SolidityContract.soliditySrc) ;
+		sync.run();
 
-		new DeployContract(sync, contract).run() ;
+		EthereumContract eth = new EthereumContract(SolidityContract.soliditySrc) ;
 
-		/*new CallConstructor(sync, contract,
-				"49a337147d9249ffe437a780fd6ba1ffd3e2bdad",
-				"0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f",
-				"velo",
-				"carotte"
-		).run() ;*/
+		new DeployContract(sync, eth).run();
 
-		CallGetSign call = new CallGetSign(sync, contract, "getU1") ;
-		call.run();
-		Object obj = call.getSign() ;
-		System.out.println("\n\nSIGN = " + obj +"\n\n") ;
+		sync.closeSync();
 
-		new CallSetSign(sync, contract, "signatureUser1").run() ;
-
-		call.run();
-		obj = call.getSign() ;
-		System.out.println("\n\nSIGN = " + obj +"\n\n") ;
-
-
-		//System.out.println("\n\nContract MODIFIED with Constructor !\n\n");
-
-		//Thread.currentThread().sleep(5000);
-		//sync.closeSync();
 	}
 	
 	public void stop(){

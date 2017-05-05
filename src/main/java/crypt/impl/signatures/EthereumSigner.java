@@ -42,7 +42,12 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
             sync.closeSync();
             return false ;
         }
-        sync.closeSync();
+        //VERIFIE TOUT LES GETTERS
+        /*if(!call.getTODO) {
+            sync.closeSync();
+            return false ;
+        }*/
+
         return true;
     }
 }
