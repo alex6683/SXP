@@ -20,15 +20,21 @@ public class ContractCallImpl extends SendTransaction {
     }
 
     //Call contract Constructor on blockChain
-    public void contractBlockChainConstructor(String user1, String user2, String itemUser1, String itemUser2) throws Exception {
+    public void contractBlockChainConstructor(String user1, String user2, String itemU1, String itemU2, String clause1, String clause2) throws Exception {
         CallTransaction.Function Sign = contractCall.getConstructor() ;
         byte[] functionCallBytes = Sign.encode(
-                /*user1,
+                user1,
                 user2,
-                itemUser1,
-                itemUser2*/
+                itemU1,
+                itemU2,
+                clause1,
+                clause2
         );
         TransactionReceipt receipt1 = sendTxAndWait(contract.getSender(), contract.getContractAdr(), functionCallBytes);
+        if (!receipt1.isSuccessful()) {
+            System.err.println("Some troubles creating a contract: " + receipt1.getError());
+            return;
+        }
     }
 
     //Call function of our contract
