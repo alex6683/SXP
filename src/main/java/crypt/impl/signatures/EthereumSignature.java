@@ -17,11 +17,10 @@ public class EthereumSignature {
     private byte[] contractAdr ;
 
 
-    public EthereumSignature(@JsonProperty("hashSign") Transaction tx,
-                             @JsonProperty("contractAdr") byte[] contractAdr) {
+    public EthereumSignature(@JsonProperty("hashSign") Transaction tx) {
 
         this.tx = tx;
-        this.contractAdr = contractAdr;
+        this.contractAdr = tx.getContractAddress() ;
     }
 
     public Transaction getTx() { return tx ; }

@@ -24,37 +24,38 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
 
     EthereumContract ethContract ;
 
+    private String id ;
     private ArrayList<EthereumKey> parties ;
+    private ArrayList<String> clauses ;
+    private HashMap<EthereumKey, String> partieName ;
     private HashMap<EthereumKey, EthereumSignature> signatures ;
-    private Signable<EthereumSignature> clauses ;
     private EthereumSigner signer;
 
     public BlockChainContract(ContractEntity contract, EthereumContract ethContract) {
         super() ;
-        this.contract = contract ;
+        super.contract = contract ;
+        id = contract.getId() ;
         setParties(contract.getParties());
+        setClauses(contract.getClauses()) ;
         signer = new EthereumSigner(ethContract) ;
     }
 
-    public void setParties(ArrayList<String> s){
-        for (String u : s){
+    public void setParties(ArrayList<String> partiesEntity){
+        for (String part : partiesEntity){
             JsonTools<User> json = new JsonTools<>(new TypeReference<User>(){});
             Users users = new Users();
-            User user = json.toEntity(users.get(u));
+            User user = json.toEntity(users.get(part));
             this.parties.add(user.getEthKeys());
         }
     }
 
-    public void setClauses(Signable<EthereumSignature> c){
-        this.clauses = c;
-        ArrayList<String> a = new ArrayList<String>();
-        a.add(new String(c.getHashableData()));
-        this.contract.setClauses(a);
+    public void setClauses(ArrayList<String> clausesEntity){
+        clauses.addAll(clausesEntity) ;
     }
 
     @Override
     public void addSignature(EthereumKey k, EthereumSignature s) {
-        
+
     }
 
     @Override

@@ -13,9 +13,13 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
 
     public EthereumSigner(EthereumContract contract) { this.contract = contract ; }
 
+    public void setKey(EthereumKey keys) {
+        super.key = keys ;
+    }
+
     @Override
     public EthereumKey getKey() {
-        return this.key ;
+        return super.key ;
     }
 
     @Override
@@ -28,7 +32,7 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
 
         sync.closeSync();
 
-        return new EthereumSignature(signer.getTx().getTransaction(), contract.getContractAdr());
+        return new EthereumSignature(signer.getTx().getTransaction());
     }
 
     @Override
@@ -36,6 +40,7 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
         SyncBlockChain sync = new SyncBlockChain(Config.class) ;
         sync.run() ;
         ethereumSignature.getTx().verify();
+
         CallGetSign call = new CallGetSign(sync, contract, "getU1") ;
         call.run();
         if(!call.getSign()) {

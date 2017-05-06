@@ -1,5 +1,7 @@
 package protocol.impl.blockChain;
 
+import crypt.impl.hashs.SHA256Hasher;
+import model.entity.EthereumKey;
 import org.ethereum.crypto.ECKey;
 import org.ethereum.facade.Ethereum ;
 import org.ethereum.core.CallTransaction;
@@ -13,30 +15,39 @@ import java.io.IOException;
  * Created by alex on 18/04/17.
  */
 public class EthereumContract {
-
-    //A gerer dans les Entité
-    ECKey sender = ECKey.fromPrivate(
-            Hex.decode(
-                    "287fc6941394e06872850966e20fe190ad43b3d0a3caa82e42cd077a6aaeb8b5"
-            )
-    );
-
     
+    private ECKey sender ;
     private String contractSrc ;
+    private byte[] hashContract ;
     private CompilationResult.ContractMetadata contractMetadata ;
     private byte[] contractAdr ;
 
-
+    //Constructor with default Solidity Src
     public EthereumContract() {
         contractSrc = new SolidityContract().soliditySrc ;
         contractMetadata = null ;
         contractAdr = null ;
+        hashContract = new SHA256Hasher().getHash(contractSrc.getBytes()) ;
+        sender = ECKey.fromPrivate(
+                Hex.decode("287fc6941394e06872850966e20fe190ad43b3d0a3caa82e42cd077a6aaeb8b5")
+        );
     }
 
+    //Constructor with default Solidity Src
+    public EthereumContract(EthereumKey keys) {
+        contractSrc = new SolidityContract().soliditySrc ;
+        contractMetadata = null ;
+        contractAdr = null ;
+        hashContract = new SHA256Hasher().getHash(contractSrc.getBytes()) ;
+        sender = ECKey.fromPrivate(Hex.decode(keys.getPrivateKey().toString())) ;
+    }
+
+    //Constructor with your own Solidity Src
     public EthereumContract(String src) {
         contractSrc = src ;
         contractMetadata = null ;
         contractAdr = null ;
+        hashContract = new SHA256Hasher().getHash(contractSrc.getBytes()) ;
     }
 
     //GETTERS//
@@ -50,6 +61,9 @@ public class EthereumContract {
         return contractAdr;
     }
     public ECKey getSender() { return sender ; }
+    public byte[] getHashContract() {
+        return hashContract;
+    }
     ///////////
 
     //SETTERS//

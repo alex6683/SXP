@@ -19,6 +19,7 @@ public abstract class SendTransaction {
     protected SyncBlockChain sync ;
     protected Map<ByteArrayWrapper, TransactionReceipt> txWaiters =
             Collections.synchronizedMap(new HashMap<ByteArrayWrapper, TransactionReceipt>());
+    protected long numBlock ;
 
     public SendTransaction(SyncBlockChain ethereum) {
         sync = ethereum ;
