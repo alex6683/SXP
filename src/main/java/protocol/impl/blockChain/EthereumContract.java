@@ -15,7 +15,7 @@ import java.io.IOException;
  * Created by alex on 18/04/17.
  */
 public class EthereumContract {
-    
+
     private ECKey sender ;
     private String contractSrc ;
     private byte[] hashContract ;
