@@ -51,7 +51,7 @@ public class BlockChainEstablisherTest {
     @Test
     public void test() {
 
-       /* // Starting the Application to be able to test it
+        // Starting the Application to be able to test it
         if (Application.getInstance()==null){
             new Application();
             Application.getInstance().runForTests(8081);
@@ -83,7 +83,6 @@ public class BlockChainEstablisherTest {
             token.setToken(auth.getToken(logins[k], passwords[k]));
             token.setUserid(u[k].getId());
         }
-        */
     }
 
 }

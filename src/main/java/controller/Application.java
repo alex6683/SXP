@@ -62,7 +62,7 @@ public class Application {
 		//new Application();
 		//Application.getInstance().runForTests(8081);
 
-		SyncBlockChain sync = new SyncBlockChain(Config.class) ;
+		/*SyncBlockChain sync = new SyncBlockChain(Config.class) ;
 
 		sync.run();
 
@@ -71,7 +71,7 @@ public class Application {
 		new DeployContract(sync, eth).run();
 
 		sync.closeSync();
-
+*/
 	}
 	
 	public void stop(){
