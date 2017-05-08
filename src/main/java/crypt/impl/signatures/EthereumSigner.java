@@ -9,12 +9,12 @@ import protocol.impl.blockChain.*;
  */
 public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKey> {
 
-    EthereumContract contract ;
+    private EthereumContract contract ;
+    private SyncBlockChain sync ;
 
-    public EthereumSigner(EthereumContract contract) { this.contract = contract ; }
-
-    public void setKey(EthereumKey keys) {
-        super.key = keys ;
+    public EthereumSigner(EthereumContract contract, SyncBlockChain sync) {
+        this.contract = contract ;
+        this.sync = sync ;
     }
 
     @Override
@@ -24,13 +24,13 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
 
     @Override
     public EthereumSignature sign(byte[] message) {
-        SyncBlockChain sync = new SyncBlockChain(Config.class) ;
-        sync.run() ;
 
         CallSetSign signer = new CallSetSign(sync, contract, "signatureUser1") ;
         signer.run() ;
 
-        sync.closeSync();
+        if(signer.getTx() == null) {
+            throw new NullPointerException("Sign Tx don't exist on the BlockChain" + signer.getTx().getError()) ;
+        }
 
         return new EthereumSignature(signer.getTx().getTransaction());
     }

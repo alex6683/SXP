@@ -57,7 +57,6 @@ public class CallSetSign extends ContractCallImpl implements Runnable {
 
                 try {
                     tx = super.callFunctNoArgs(function);
-                    this.numBlock = sync.getEthereum().getBlockchain().getBestBlock().getNumber() ;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

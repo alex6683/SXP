@@ -16,9 +16,10 @@ import java.io.IOException;
  */
 public class EthereumContract {
 
-    private ECKey sender ;
+
     private String contractSrc ;
-    private byte[] hashContract ;
+    private byte[] hashSolidity ;
+    private ECKey sender ;
     private CompilationResult.ContractMetadata contractMetadata ;
     private byte[] contractAdr ;
 
@@ -27,27 +28,28 @@ public class EthereumContract {
         contractSrc = new SolidityContract().soliditySrc ;
         contractMetadata = null ;
         contractAdr = null ;
-        hashContract = new SHA256Hasher().getHash(contractSrc.getBytes()) ;
+        hashSolidity = new SHA256Hasher().getHash(contractSrc.getBytes()) ;
         sender = ECKey.fromPrivate(
                 Hex.decode("287fc6941394e06872850966e20fe190ad43b3d0a3caa82e42cd077a6aaeb8b5")
         );
     }
 
-    //Constructor with default Solidity Src
+    //Constructor with default Solidity Src and your sign keys
     public EthereumContract(EthereumKey keys) {
         contractSrc = new SolidityContract().soliditySrc ;
         contractMetadata = null ;
         contractAdr = null ;
-        hashContract = new SHA256Hasher().getHash(contractSrc.getBytes()) ;
-        sender = ECKey.fromPrivate(Hex.decode(keys.getPrivateKey().toString())) ;
+        hashSolidity = new SHA256Hasher().getHash(contractSrc.getBytes()) ;
+        sender = ECKey.fromPrivate(keys.getPrivateKey()) ;
     }
 
-    //Constructor with your own Solidity Src
-    public EthereumContract(String src) {
+    //Constructor with your own Solidity Src and your sign keys
+    public EthereumContract(String src, EthereumKey keys) {
         contractSrc = src ;
         contractMetadata = null ;
         contractAdr = null ;
-        hashContract = new SHA256Hasher().getHash(contractSrc.getBytes()) ;
+        hashSolidity = new SHA256Hasher().getHash(contractSrc.getBytes()) ;
+        sender = ECKey.fromPrivate(keys.getPrivateKey()) ;
     }
 
     //GETTERS//
@@ -61,8 +63,8 @@ public class EthereumContract {
         return contractAdr;
     }
     public ECKey getSender() { return sender ; }
-    public byte[] getHashContract() {
-        return hashContract;
+    public byte[] gethashSolidity() {
+        return hashSolidity;
     }
     ///////////
 
@@ -117,6 +119,6 @@ public class EthereumContract {
         return !(contractMetadata == null) ;
     }
     public boolean isDeployed() {
-        return !(contractAdr == null) ;
+        return isCompiled() && !(contractAdr == null) ;
     }
 }

@@ -1,5 +1,6 @@
 package protocol.impl.blockChain;
 
+import model.entity.EthereumKey;
 import org.ethereum.core.Transaction;
 import org.ethereum.core.TransactionReceipt;
 import org.ethereum.crypto.ECKey;
@@ -20,6 +21,8 @@ public abstract class SendTransaction {
     protected Map<ByteArrayWrapper, TransactionReceipt> txWaiters =
             Collections.synchronizedMap(new HashMap<ByteArrayWrapper, TransactionReceipt>());
     protected long numBlock ;
+
+    private EthereumKey senderKeys ;
 
     public SendTransaction(SyncBlockChain ethereum) {
         sync = ethereum ;
@@ -54,6 +57,7 @@ public abstract class SendTransaction {
         while(true) {
             TransactionReceipt receipt = txWaiters.get(txHashW);
             if (receipt != null) {
+                numBlock = sync.getEthereum().getBlockchain().getBestBlock().getNumber();
                 return receipt;
             }
             else {

@@ -62,16 +62,16 @@ public class Application {
 		//new Application();
 		//Application.getInstance().runForTests(8081);
 
-		/*SyncBlockChain sync = new SyncBlockChain(Config.class) ;
+		SyncBlockChain sync = new SyncBlockChain(Config.class) ;
 
 		sync.run();
 
-		EthereumContract eth = new EthereumContract(SolidityContract.soliditySrc) ;
+		EthereumContract eth = new EthereumContract() ;
 
 		new DeployContract(sync, eth).run();
 
 		sync.closeSync();
-*/
+
 	}
 	
 	public void stop(){

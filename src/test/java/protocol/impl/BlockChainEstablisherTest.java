@@ -49,7 +49,7 @@ public class BlockChainEstablisherTest {
 
 
     @Test
-    public void test() {
+    public void testTEST() {
 
         // Starting the Application to be able to test it
         if (Application.getInstance()==null){

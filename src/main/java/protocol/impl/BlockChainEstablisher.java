@@ -1,5 +1,6 @@
 package protocol.impl;
 
+import com.google.common.primitives.Bytes;
 import controller.Application;
 import crypt.impl.signatures.EthereumSignature;
 import crypt.impl.signatures.EthereumSigner;
@@ -8,9 +9,12 @@ import model.entity.EthereumKey;
 import model.entity.User;
 import model.syncManager.UserSyncManagerImpl;
 import network.api.EstablisherService;
+import network.api.Messages;
+import network.api.ServiceListener;
+import org.ethereum.facade.Ethereum;
+import org.mapdb.Atomic;
 import protocol.api.Establisher;
-import protocol.impl.blockChain.BlockChainContract;
-import protocol.impl.blockChain.EthereumContract;
+import protocol.impl.blockChain.*;
 import rest.api.Authentifier;
 
 import java.math.BigInteger;
@@ -24,9 +28,9 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
     private final EstablisherService establisherService = (EstablisherService) Application.getInstance().getPeer().getService(EstablisherService.NAME);
 
     private EthereumContract ethContract ;
+    private SyncBlockChain sync ;
 
     public BlockChainEstablisher(String token, HashMap<EthereumKey, String> uri){
-        ethContract = new EthereumContract() ;
 
         // Matching the uris
         uris = uri;
@@ -35,13 +39,49 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         Authentifier auth = Application.getInstance().getAuth();
         UserSyncManager users = new UserSyncManagerImpl();
         User currentUser = users.getUser(auth.getLogin(token), auth.getPassword(token));
-        signer = new EthereumSigner(ethContract);
-        signer.setKey(currentUser.getEthKeys());
+        super.signer = new EthereumSigner(ethContract, sync);
+        super.signer.setKey(currentUser.getEthKeys());
+    }
+
+    public void initialize(BlockChainContract bcContract, boolean deploy) {
+        initialize(bcContract);
+        if(deploy && !ethContract.isDeployed()) {
+            new DeployContract(sync, ethContract).run();
+        }
+    }
+
+    public void setContractAdrTo(EthereumContract eth1, EthereumContract eth2) {
+        if(eth1.isDeployed() && !eth2.isDeployed()) {
+            eth2.setContractAdr(eth1.getContractAdr());
+        }
+        else if(!eth1.isDeployed() && eth2.isDeployed()) {
+            eth1.setContractAdr(eth2.getContractAdr());
+        }
+        else
+            try {
+                throw new InterruptedException("Only one contract must be deployed on the BlockChain") ;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
     }
 
     @Override
-    public void initialize(BlockChainContract c) {
-        super.contract = c ;
+    public void initialize(BlockChainContract bcContract) {
+        super.contract = bcContract ;
+        ethContract = bcContract.getEthContract() ;
+        sync = new SyncBlockChain(Config.class) ;
+        sync.run() ;
+
+        //RECEIV THE CONTRACT ADDRESS ON BLOCKCHAIN AND SAVE IT.
+        establisherService.addListener(new ServiceListener() {
+            @Override
+            public void notify(Messages messages) {
+                byte[] contractAdr = messages.getMessage("contract").getBytes() ;
+                if(!ethContract.isDeployed()) {
+                    ethContract.setContractAdr(contractAdr);
+                }
+            }
+        }, "blala") ;
     }
 
     @Override
