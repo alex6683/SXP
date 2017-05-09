@@ -21,6 +21,12 @@ public class ContractCallImpl extends SendTransaction {
         contractCall = new CallTransaction.Contract(contract.getContractMetadata().abi);
     }
 
+    public ContractCallImpl(SyncBlockChain ethereum, EthereumContract contract, EthereumKey keys) {
+        super(ethereum, keys);
+        this.contract = contract ;
+        contractCall = new CallTransaction.Contract(contract.getContractMetadata().abi);
+    }
+
     public void contractBlockChainConstructor(Object ...args) throws Exception {
         CallTransaction.Function function = contractCall.getConstructor();
         if (function.type == CallTransaction.FunctionType.constructor)

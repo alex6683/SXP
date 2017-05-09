@@ -68,7 +68,9 @@ public class Application {
 
 		sync.run();
 
-		EthereumContract eth = new EthereumContract() ;
+		EthereumContract contract = new EthereumContract() ;
+
+		new DeployContract(sync, contract).run();
 
 		new CallConstructor(sync, contract,
 				ByteUtil.hexStringToBytes("0x0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f"),
