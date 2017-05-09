@@ -67,7 +67,7 @@ public class BlockChainContractTest {
         User[] users = new User[N];
         String[] logins = new String[N];
         String[] passwords = new String[N];
-        for (int i=0; i<N; i++){
+        for (int i=0; i<N; i++) {
             logins[i] = createString(5);
             passwords[i] = createString(10);
 
@@ -91,8 +91,7 @@ public class BlockChainContractTest {
 
             //Add partie in Contract Entity
             contractEntity.setParties(setEntityContract(users[i].getId()));
+            System.out.println("USERS : " + contractEntity.getParties().toString()) ;
         }
-
-        System.out.println("" + contractEntity.getParties().toString()) ;
     }
 }
