@@ -16,6 +16,7 @@ import java.io.IOException;
  */
 public class EthereumContract {
 
+    // TODO : Changer sender de class (SendTx ou Signer?)
 
     private String contractSrc ;
     private byte[] hashSolidity ;
@@ -40,7 +41,7 @@ public class EthereumContract {
         contractMetadata = null ;
         contractAdr = null ;
         hashSolidity = new SHA256Hasher().getHash(contractSrc.getBytes()) ;
-        sender = ECKey.fromPrivate(keys.getPrivateKey()) ;
+        sender = keys.getPrivECKey() ;
     }
 
     //Constructor with your own Solidity Src and your sign keys
@@ -62,7 +63,9 @@ public class EthereumContract {
     public byte[] getContractAdr() {
         return contractAdr;
     }
-    public ECKey getSender() { return sender ; }
+    public ECKey getSender() {
+        return sender ;
+    }
     public byte[] gethashSolidity() {
         return hashSolidity;
     }

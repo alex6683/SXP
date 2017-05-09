@@ -73,6 +73,7 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         sync.run() ;
 
         //RECEIV THE CONTRACT ADDRESS ON BLOCKCHAIN AND SAVE IT.
+        //MAYBE HASHSOLIDITY
         establisherService.addListener(new ServiceListener() {
             @Override
             public void notify(Messages messages) {

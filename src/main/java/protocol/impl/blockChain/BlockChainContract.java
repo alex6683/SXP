@@ -27,19 +27,21 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
 
     private String id ;
     private Date date ;
-    private ArrayList<EthereumKey> parties ;
-    private ArrayList<String> clauses ;
-    private HashMap<EthereumKey, String> partiesName ;
-    private HashMap<EthereumKey, EthereumSignature> signatures ;
+    private ArrayList<EthereumKey> parties = new ArrayList<>();
+    private ArrayList<String> clauses = new ArrayList<>();
+    private HashMap<EthereumKey, String> partiesName = new HashMap<>();
+    private HashMap<EthereumKey, EthereumSignature> signatures = new HashMap<>();
     private EthereumSigner signer;
 
-    public BlockChainContract(ContractEntity contract, EthereumContract ethContract, SyncBlockChain sync) {
+    public BlockChainContract(ContractEntity contract, SyncBlockChain syncBc) {
         super() ;
         super.contract = contract ;
         date = contract.getCreatedAt() ;
         setParties(contract.getParties());
         setClauses(contract.getClauses()) ;
         id = new String(this.getHashableData()) ;
+        ethContract = new EthereumContract() ;
+        this.sync = syncBc ;
         signer = new EthereumSigner(ethContract, sync) ;
     }
 
@@ -61,9 +63,7 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
     public EthereumContract getEthContract() {
         return ethContract;
     }
-    public String getId() {
-        return id;
-    }
+    public String getId() { return id; }
     public ArrayList<EthereumKey> getParties() {
         return parties;
     }
@@ -127,6 +127,11 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
     @Override
     public EthereumSignature sign(EthereumSigner signer, EthereumKey k) {
         setStatus(Status.SIGNING);
-        return signer.sign(new byte[0]) ;
+        EthereumSignature signature = signer.sign(new byte[0]) ;
+        if(signature == null) {
+            throw new NullPointerException("Signature de " + k.getPublicKey() + "impossible");
+        }
+        addSignature(k, signature);
+        return signature ;
     }
 }

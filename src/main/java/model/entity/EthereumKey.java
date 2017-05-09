@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import crypt.api.key.AsymKey;
+import org.ethereum.crypto.ECKey;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
@@ -13,7 +14,7 @@ import java.math.BigInteger;
 /**
  * Created by alex on 18/04/17.
  */
-public class EthereumKey implements AsymKey<BigInteger>, Serializable {
+public class EthereumKey extends ECKey implements AsymKey<BigInteger>, Serializable {
     //@NotNull
 	@XmlElement(name="privateKey")
 	@JsonSerialize(using=controller.tools.BigIntegerSerializer.class)
@@ -48,6 +49,10 @@ public class EthereumKey implements AsymKey<BigInteger>, Serializable {
     @Override
     public void setPrivateKey(BigInteger pk) {
         privateKey = pk;
+    }
+
+    public ECKey getPrivECKey() {
+        return ECKey.fromPrivate(privateKey) ;
     }
 
 
