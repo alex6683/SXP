@@ -21,8 +21,8 @@ public class BlockChainConfigTest {
 
         Config configTest = new Config();
 
-        System.out.println();
+        /*System.out.println();
         System.out.print(configTest.getConfiguration());
-        System.out.println();
+        System.out.println();*/
     }
 }

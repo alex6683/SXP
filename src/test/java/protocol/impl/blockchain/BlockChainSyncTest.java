@@ -18,8 +18,8 @@ public class BlockChainSyncTest {
             Application.getInstance().runForTests(8081);
         }*/
 
-        SyncBlockChain syncTest = new SyncBlockChain(Config.class);
+        /*SyncBlockChain syncTest = new SyncBlockChain(Config.class);
         syncTest.run();
-        syncTest.getEthereum().close();
+        syncTest.getEthereum().close();*/
     }
 }

@@ -83,6 +83,7 @@ public class SigmaEstablisher extends Establisher<BigInteger, ElGamalKey, ElGama
 		User currentUser = users.getUser(auth.getLogin(token), auth.getPassword(token));
 		signer = new ElGamalSigner();
 		signer.setKey(currentUser.getKey());
+		System.out.println("Curr user : " + currentUser.getId());
 	}
 	
 	/**
