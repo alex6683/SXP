@@ -1,5 +1,6 @@
 package protocol.impl.blockChain;
 
+import model.entity.EthereumKey;
 import org.ethereum.core.Block;
 import org.ethereum.core.TransactionReceipt;
 import org.ethereum.db.ByteArrayWrapper;
@@ -16,8 +17,14 @@ import static java.lang.Thread.sleep;
 public class DeployContract extends SendTransaction implements Runnable {
     private EthereumContract contract ;
 
+    @Deprecated
     public DeployContract(SyncBlockChain sync, EthereumContract contract) {
         super(sync) ;
+        this.contract = contract ;
+    }
+
+    public DeployContract(SyncBlockChain sync, EthereumContract contract, EthereumKey keys) {
+        super(sync, keys) ;
         this.contract = contract ;
     }
 

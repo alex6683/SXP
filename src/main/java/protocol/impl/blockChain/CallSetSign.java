@@ -1,5 +1,6 @@
 package protocol.impl.blockChain;
 
+import model.entity.EthereumKey;
 import org.ethereum.core.Block;
 import org.ethereum.core.TransactionReceipt;
 import org.ethereum.db.ByteArrayWrapper;
@@ -18,11 +19,16 @@ public class CallSetSign extends ContractCallImpl implements Runnable {
 
     private TransactionReceipt tx ;
 
+    @Deprecated
     public CallSetSign(SyncBlockChain ethereum, EthereumContract contract, String function) {
         super(ethereum, contract);
         this.function = function ;
     }
 
+    public CallSetSign(SyncBlockChain ethereum, EthereumContract contract, EthereumKey keys, String function) {
+        super(ethereum, contract, keys);
+        this.function = function ;
+    }
 
     public TransactionReceipt getTx() {
         return tx;

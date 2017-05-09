@@ -122,7 +122,7 @@ public class BlockChainContractTest {
         contractEntity.setCreatedAt(new Date()) ;
         System.out.println("DATES : " + contractEntity.getCreatedAt()) ;
 
-        bcContract = new BlockChainContract(contractEntity, )
+        bcContract = new BlockChainContract(contractEntity) ;
 
     }
 }

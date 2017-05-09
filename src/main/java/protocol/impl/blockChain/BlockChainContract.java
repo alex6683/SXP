@@ -33,7 +33,7 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
     private HashMap<EthereumKey, EthereumSignature> signatures = new HashMap<>();
     private EthereumSigner signer;
 
-    public BlockChainContract(ContractEntity contract, SyncBlockChain syncBc) {
+    public BlockChainContract(ContractEntity contract) {
         super() ;
         super.contract = contract ;
         date = contract.getCreatedAt() ;
@@ -41,7 +41,7 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         setClauses(contract.getClauses()) ;
         id = new String(this.getHashableData()) ;
         ethContract = new EthereumContract() ;
-        this.sync = syncBc ;
+        sync = new SyncBlockChain(Config.class) ;
         signer = new EthereumSigner(ethContract, sync) ;
     }
 
