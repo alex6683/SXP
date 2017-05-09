@@ -8,6 +8,7 @@ import model.entity.ContractEntity;
 import model.syncManager.UserSyncManagerImpl;
 import network.api.Peer;
 import network.factories.PeerFactory;
+import org.ethereum.util.ByteUtil;
 import protocol.impl.blockChain.*;
 import rest.api.Authentifier;
 import rest.factories.AuthentifierFactory;
@@ -60,21 +61,27 @@ public class Application {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		//new Application();
-		//Application.getInstance().runForTests(8081);
+		/*new Application();
+		Application.getInstance().runForTests(8081);*/
 
-		/*SyncBlockChain sync = new SyncBlockChain(Config.class) ;
+		SyncBlockChain sync = new SyncBlockChain(Config.class) ;
 
 		sync.run();
 
 		EthereumContract eth = new EthereumContract() ;
 
-		new DeployContract(sync, eth).run();*/
+		new CallConstructor(sync, contract,
+				ByteUtil.hexStringToBytes("0x0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f"),
+				ByteUtil.hexStringToBytes("0x49a337147d9249ffe437a780fd6ba1ffd3e2bdad"),
+				"velo",
+				"carotte",
+				"IZI",
+				"OKLM"
+				).run() ;
 
-		/*CreateEthAsymKey account = new CreateEthAsymKey() ;
-		System.out.println(account.toString()) ;*/
 
-
+		Thread.currentThread().sleep(5000);
+		sync.closeSync();
 	}
 	
 	public void stop(){

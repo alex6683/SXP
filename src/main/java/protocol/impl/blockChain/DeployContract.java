@@ -64,6 +64,8 @@ public class DeployContract extends SendTransaction implements Runnable {
                             Hex.decode(contract.getContractMetadata().bin)
                     ) ;
                     contract.setContractAdr(receipt.getTransaction().getContractAddress()) ;
+                    if(contract.isCompiled())
+                        System.out.println("\n\nContract Compiled ?? : " + contract.isCompiled() + "\n\n");
                     if(contract.isDeployed())
                         System.out.println("\n\nContract Deployed !! : " + Hex.toHexString(contract.getContractAdr()) + "\n\n") ;
                 } catch( Exception e) { e.printStackTrace() ; }

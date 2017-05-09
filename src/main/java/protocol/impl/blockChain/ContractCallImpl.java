@@ -12,7 +12,7 @@ import org.spongycastle.util.encoders.Hex;
 public class ContractCallImpl extends SendTransaction {
 
     private CallTransaction.Contract contractCall ;
-    private EthereumContract contract ;
+    protected EthereumContract contract ;
 
     @Deprecated
     public ContractCallImpl(SyncBlockChain ethereum, EthereumContract contract) {
@@ -21,29 +21,27 @@ public class ContractCallImpl extends SendTransaction {
         contractCall = new CallTransaction.Contract(contract.getContractMetadata().abi);
     }
 
-    public ContractCallImpl(SyncBlockChain ethereum, EthereumContract contract, EthereumKey keys) {
-        super(ethereum, keys);
-        this.contract = contract ;
-        contractCall = new CallTransaction.Contract(contract.getContractMetadata().abi);
-    }
-
-    //Call contract Constructor on blockChain
-    public void contractBlockChainConstructor(String user1, String user2, String itemUser1, String itemUser2) throws Exception {
-        CallTransaction.Function Sign = contractCall.getConstructor() ;
-        byte[] functionCallBytes = Sign.encode(
-                /*user1,
-                user2,
-                itemUser1,
-                itemUser2*/
-        );
+    public void contractBlockChainConstructor(Object ...args) throws Exception {
+        CallTransaction.Function function = contractCall.getConstructor();
+        if (function.type == CallTransaction.FunctionType.constructor)
+            System.out.println("///////////// Constructeur trouvé /////////////////////////////////" + function.type.toString() + function.type.name());
+        byte[] functionCallBytes = function.encode(args);
         TransactionReceipt receipt1 = sendTxAndWait(contract.getSender(), contract.getContractAdr(), functionCallBytes);
+        if (!receipt1.isSuccessful()) {
+            System.err.println("Some troubles launching constructor: " + receipt1.getError() + contractCall.getConstructor().name);
+            return;
+        }
     }
 
-    //Call function with No Args of our contract
-    public TransactionReceipt callFunctNoArgs(String functionName) throws Exception {
-        TransactionReceipt receipt2 = sendTxAndWait(contract.getSender(), contract.getContractAdr(),
-                contractCall.getByName(functionName).encode());
-        return receipt2 ;
+    //Call function of our contract
+    public void callFunc(String func, Object ...args) throws Exception {
+        CallTransaction.Function fct = contractCall.getByName(func);
+        byte[] functionCallBytes = fct.encode(args);
+        TransactionReceipt receipt2 = sendTxAndWait(contract.getSender(), contract.getContractAdr(), functionCallBytes);
+        if (!receipt2.isSuccessful()) {
+            System.err.println("Some troubles calling a contract function : " + receipt2.getError());
+            return;
+        }
     }
 
     //Return value of get function of our contract
