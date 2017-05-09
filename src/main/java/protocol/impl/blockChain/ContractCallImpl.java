@@ -19,9 +19,26 @@ public class ContractCallImpl extends SendTransaction {
         contractCall = new CallTransaction.Contract(contract.getContractMetadata().abi);
     }
 
+    public void contractBlockChainConstructor(Object ...args) throws Exception {
+        CallTransaction.Function function = contractCall.getConstructor();
+        if (function.type == CallTransaction.FunctionType.constructor)
+            System.out.println("///////////// Constructeur trouvé /////////////////////////////////" + function.type.toString() + function.type.name());
+        byte[] functionCallBytes = function.encode(args);
+        TransactionReceipt receipt1 = sendTxAndWait(contract.getSender(), contract.getContractAdr(), functionCallBytes);
+        if (!receipt1.isSuccessful()) {
+            System.err.println("Some troubles launching constructor: " + receipt1.getError() + contractCall.getConstructor().name);
+            return;
+        }
+    }
+
     //Call contract Constructor on blockChain
-    public void contractBlockChainConstructor(String user1, String user2, String itemU1, String itemU2, String clause1, String clause2) throws Exception {
+   /* public void contractBlockChainConstructor(String user1, String user2, String itemU1, String itemU2, String clause1, String clause2) throws Exception {
         CallTransaction.Function Sign = contractCall.getConstructor() ;
+        if (Sign.type == CallTransaction.FunctionType.constructor)
+            System.out.println("///////////// Constructeur trouvé /////////////////////////////////" + Sign.type.toString() + Sign.type.name());
+
+        System.out.println(" c bon ?" + user1 + " / " +  user2 + " / " + itemU1 + " / " + itemU2 +  " / " + clause1 + " / " + clause2);
+
         byte[] functionCallBytes = Sign.encode(
                 user1,
                 user2,
@@ -30,12 +47,13 @@ public class ContractCallImpl extends SendTransaction {
                 clause1,
                 clause2
         );
-        TransactionReceipt receipt1 = sendTxAndWait(contract.getSender(), contract.getContractAdr(), functionCallBytes);
+
+        TransactionReceipt receipt1 = sendTxAndWait(contract.getSender(), contract.getContractAdr(), contractCall.getConstructor().encode(user1, user2, itemU1, itemU2, clause1, clause2));
         if (!receipt1.isSuccessful()) {
-            System.err.println("Some troubles creating a contract: " + receipt1.getError());
+            System.err.println("Some troubles launching constructor: " + receipt1.getError() + contractCall.getConstructor().name);
             return;
         }
-    }
+    } */
 
     //Call function of our contract
     public void callFunc(String func, Object ...args) throws Exception {
@@ -43,7 +61,7 @@ public class ContractCallImpl extends SendTransaction {
         byte[] functionCallBytes = fct.encode(args);
         TransactionReceipt receipt2 = sendTxAndWait(contract.getSender(), contract.getContractAdr(), functionCallBytes);
         if (!receipt2.isSuccessful()) {
-            System.err.println("Some troubles creating a contract: " + receipt2.getError());
+            System.err.println("Some troubles calling a contract function : " + receipt2.getError());
             return;
         }
     }

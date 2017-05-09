@@ -1,93 +1,76 @@
-pragma solidity ^0.4.2;
-/* Manage Contract Ownership*/
-contract owned {
-    address public owner;
+pragma solidity ^0.4.8;
 
-    // Defines Owner
-    function owned() {
-        owner = msg.sender;
-    }
-
-    // Check ifOwner
-    modifier onlyOwner {
-        if (msg.sender != owner) throw;
+                
+    /// @title Trade contract
+    contract Trade {
+        struct Member {
+            address add;
+            string item;
+            bool signed;
+        }
+        
+        /* Contract Variables and events */
+        string public clauseA;
+        string public clauseB;
+        Member[] public members;
+                
+        // Check ifMember
+        modifier onlyMember {
+        if (msg.sender != members[0].add && msg.sender != members[1].add)
+            throw;
         _;
-    }
-
-    function transferOwnership(address newOwner) onlyOwner {
-        owner = newOwner;
-    }
-}
-
-contract Trade is owned {
-
-    /* Contract Variables and events */
-    // This declares a state variable that
-    // stores a `Voter` struct for each possible address.
-    mapping(address => Member) public membersAdd;
-    Member[] public members;
-    
-    int MAXMEMBERS = 5;
-
-    event Voted(uint proposalID, bool position, address voter, string justification);
-    event MembershipChanged(address member, bool isMember);
-    int indice = 0;
-
-    struct Member {
-        bool isOwner;
-        address add;
-        string item;
-        bool signed;
-    }
-    
-    // Check ifMember
-    modifier onlyMember {
-        int cmp = 0;
-        
-        for(int i = 0; i < members.length; i++){
-            if (msg.sender != members[i].add)
-                cmp++;
         }
-        
-        if(cmp == members.length) throw;
-        _;
-    }
-    
-    function initMember (string item) returns (Member member){
-        
-        Member m;
-        
-        if (msg.sender == owner)
-            m.isOwner = true;
-        else
-            m.isOwner = false;
-        m.add = msg.sender;
-        m.item = item;
-        m.signed = false;
-    }
-    
-    function addMember(string item) onlyOwner {
-        members[indice] = initMember(item);
-        indice++;
-    }
-    
-    function signature() onlyMember {
-        for(int i = 0; i < members.length; i++){
-            if(members[i].add == msg.sender)
-                m.signed = true;
+             
+        function init(address memberU1, address memberU2, string itemU1, string itemU2, string clause1, string clause2){
+            if(msg.sender!= memberU1)
+                throw;
+            if(members[0].add == memberU1)
+                throw;
+            members[0] = Member({add:memberU1, item:itemU1, signed:false});
+            members[1] = Member({add:memberU2, item:itemU2, signed:false});
+            clauseA = clause1;
+            clauseB = clause2;
         }
-    }
-    
-    function launchTrade() onlyOwner returns (bool launch){
-        int valid = 0;
-        for(int i = 0; i < members.length; i++){
-            if(members[i].signed == true)
-                valid++;
+                
+        function signature(string items) onlyMember {
+            
+            for(uint i = 0; i < members.length; i++)
+                if(msg.sender == members[i].add)
+                    members[i].signed = true;
         }
-        
-        if(valid == members.length)
+                    
+        function launchTrade() onlyMember returns (bool launch){
+            for(uint i = 0; i < members.length; i++)
+                if(members[i].signed != true)
+                    return false;
+                        
             return true;
-        else
-            return false;
+        }
+                    
+        function getAdds() onlyMember returns (address[] adds){
+            for(uint i = 0; i < members.length; i++)
+                adds[i] = members[i].add;
+            return adds;
+        }
+                    
+        function getItem() onlyMember returns (string item){
+            for(uint i = 0; i < members.length; i++)
+                if(msg.sender == members[i].add)
+                    item = members[i].item;
+            return item;
+        }
+                    
+        function getSignatures() onlyMember returns (bool[] signatures) {
+            for(uint i = 0; i < members.length; i++)
+                signatures[i] == members[i].signed;
+            return signatures;
+        }
+            
+        function getClauseA() onlyMember constant returns (string clause) {
+            return clauseA;
+        }
+            
+        function getClauseB() onlyMember constant returns (string clause) {
+            return clauseB;
+        }
     }
-}

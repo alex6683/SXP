@@ -12,10 +12,10 @@ public class BlockChainConfigTest {
     @Test
     public void test() {
         // Starting the Application for testing
-        if (Application.getInstance() == null) {
+        /*if (Application.getInstance() == null) {
             new Application();
             Application.getInstance().runForTests(8081);
-        }
+        }*/
 
         System.out.println("Configuration actuelle de la BlockChain :");
 

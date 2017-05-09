@@ -6,6 +6,7 @@ import controller.tools.LoggerUtilities;
 import model.syncManager.UserSyncManagerImpl;
 import network.api.Peer;
 import network.factories.PeerFactory;
+import org.ethereum.util.ByteUtil;
 import protocol.impl.blockChain.*;
 import rest.api.Authentifier;
 import rest.factories.AuthentifierFactory;
@@ -58,8 +59,8 @@ public class Application {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		//new Application();
-		//Application.getInstance().runForTests(8081);
+		new Application();
+		Application.getInstance().runForTests(8081);
 
 		SyncBlockChain sync = new SyncBlockChain(Config.class) ;
 		
@@ -70,8 +71,8 @@ public class Application {
 		new DeployContract(sync, contract).run() ;
 
 		new CallConstructor(sync, contract,
-				"49a337147d9249ffe437a780fd6ba1ffd3e2bdad",
-				"0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f",
+				ByteUtil.hexStringToBytes("0x0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f"),
+				ByteUtil.hexStringToBytes("0x49a337147d9249ffe437a780fd6ba1ffd3e2bdad"),
 				"velo",
 				"carotte",
 				"IZI",
