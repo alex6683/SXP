@@ -126,20 +126,34 @@ public class BlockChainEstablisherTest {
         partis.add(users[0].getEthKeys());
         partis.add(users[1].getEthKeys());
 
-        bcContractA = new BlockChainContract(contractEntity, partis);
-        bcContractB = new BlockChainContract(contractEntity, partis);
+        BlockChainContract[] c = new BlockChainContract[N];
+
+       /* bcContractA = new BlockChainContract(contractEntity, partis);
+        bcContractB = new BlockChainContract(contractEntity, partis);*/
 
         // Creating the map of URIS
         String uri = Application.getInstance().getPeer().getUri();
         HashMap<EthereumKey, String> uris = new HashMap<>();
 
 
-        for (int i=0; i<N; i++){
+        for (int i = 0; i < N; i++) {
             EthereumKey key = users[i].getEthKeys();
-            System.out.println(i + key.toString()) ;
-            System.out.println(i + uri) ;
+            System.out.println(i + key.toString());
+            System.out.println(i + uri);
             uris.put(key, uri);
         }
+
+
+        BlockChainEstablisher[] sigmaE = new BlockChainEstablisher[N];
+
+        for (int k = 0; k < N; k++) {
+            Authentifier auth = Application.getInstance().getAuth();
+            sigmaE[k] = new BlockChainEstablisher(auth.getToken(logins[k], passwords[k]), uris);
+            sigmaE[k].initialize(c[k]);
+        }
+    }
+}
+/*
 
         BlockChainEstablisher bcEstablisherA ;
         BlockChainEstablisher bcEstablisherB ;
@@ -148,11 +162,13 @@ public class BlockChainEstablisherTest {
         bcEstablisherA = new BlockChainEstablisher(auth.getToken(logins[0], passwords[0]), uris);
         //bcEstablisherA.initialize(bcContractA, false);
 
-        /*
+        */
+/*
         auth = Application.getInstance().getAuth();
         bcEstablisherB = new BlockChainEstablisher(auth.getToken(logins[1], passwords[1]), uris);
         bcEstablisherB.initialize(bcContractB, false);
-        */
+        *//*
+
 
     }
 

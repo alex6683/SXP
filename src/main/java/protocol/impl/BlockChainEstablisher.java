@@ -40,10 +40,23 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         // Setup the signer
         Authentifier auth = Application.getInstance().getAuth();
         UserSyncManager users = new UserSyncManagerImpl();
+        User currentUser = users.getUser(auth.getLogin(token), auth.getPassword(token));
+        //signer = new EthereumSigner();
+        //signer.setKey(currentUser.getKey());
+        System.out.println("Curr user : " + currentUser.getId());
+
+
+       /*
+        // Matching the uris
+        uris = uri;
+
+        // Setup the signer
+        Authentifier auth = Application.getInstance().getAuth();
+        UserSyncManager users = new UserSyncManagerImpl();
         currentUser = users.getUser(auth.getLogin(token), auth.getPassword(token));
         //System.out.println("ID : " + currentUser.getId()) ;
         //System.out.println("PubK : " + currentUser.getEthKeys().toString()) ;
-
+        */
     }
 
     public void initialize(BlockChainContract bcContract, boolean deploy) {
