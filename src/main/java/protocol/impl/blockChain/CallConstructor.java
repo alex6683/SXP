@@ -4,6 +4,7 @@ import org.ethereum.core.Block;
 import org.ethereum.core.TransactionReceipt;
 import org.ethereum.db.ByteArrayWrapper;
 import org.ethereum.listener.EthereumListenerAdapter;
+import org.ethereum.util.ByteUtil;
 
 import java.util.List;
 
@@ -73,11 +74,24 @@ public class CallConstructor extends ContractCallImpl implements Runnable {
                     System.out.println(part1 + " / " +  part2 + " / " + item1 + " / " + item2 +  " / " + clause1 + " / " + clause2);
                     super.callFunc("init", part1, part2, item1, item2, clause1, clause2);
                     System.out.println("////////////// CONSTRUCTED //////////////");
-                    System.out.println("Addresse : " + super.getReturnContract("getAdd").toString());
-                    System.out.println("Item : " + super.getReturnContract("getItem"));
-                    System.out.println("Signature : " + super.getReturnContract("getSignature"));
+                    System.out.println("////////////// SIGNATURE /////////////////");
+                    super.callFunc("signature1");
+                    super.callFunc("signature2");
+                    System.out.println("////////////// GETTERS  /////////////////");
+                    byte[] msgSender = (byte[])  super.getReturnContract("getAdd1");
+                    byte[] Add1 = (byte[]) super.getReturnContract("getAdd2");
+                    byte[] msgSenderSolidity = (byte[]) super.getReturnContract("getMsgSender");
+                    System.out.println("Adresse 1 : " + ByteUtil.toHexString(msgSender));
+                    System.out.println("Adresse 2 : " + ByteUtil.toHexString(Add1));
+                    System.out.println("MsgSender : " + ByteUtil.toHexString(msgSenderSolidity));
+                    System.out.println("msg.sender : " + ByteUtil.toHexString(super.contract.getSender().getAddress()) + "public : " + ByteUtil.toHexString(super.contract.getSender().getPubKey()));
+                    System.out.println("Item1 : " + super.getReturnContract("getItem1"));
+                    System.out.println("Item2 : " + super.getReturnContract("getItem2"));
+                    System.out.println("Signature1 : " + super.getReturnContract("getSignature1"));
+                    System.out.println("Signature2 : " + super.getReturnContract("getSignature2"));
                     System.out.println("Clause A : " + super.getReturnContract("getClauseA"));
                     System.out.println("Clause B : " + super.getReturnContract("getClauseB"));
+
                     System.out.println("////////////// DONE     /////////////////");
                 } catch (Exception e) {
                     e.printStackTrace();

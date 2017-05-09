@@ -11,7 +11,7 @@ import org.spongycastle.util.encoders.Hex;
 public class ContractCallImpl extends SendTransaction {
 
     private CallTransaction.Contract contractCall ;
-    private EthereumContract contract ;
+    protected EthereumContract contract ;
 
     public ContractCallImpl(SyncBlockChain ethereum, EthereumContract contract) {
         super(ethereum);

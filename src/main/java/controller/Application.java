@@ -59,8 +59,8 @@ public class Application {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		new Application();
-		Application.getInstance().runForTests(8081);
+		/*new Application();
+		Application.getInstance().runForTests(8081);*/
 
 		SyncBlockChain sync = new SyncBlockChain(Config.class) ;
 		
