@@ -71,8 +71,8 @@ public class Application {
 
 		new DeployContract(sync, eth).run();*/
 
-		CreateEthAsymKey account = new CreateEthAsymKey() ;
-		System.out.println(account.toString()) ;
+		/*CreateEthAsymKey account = new CreateEthAsymKey() ;
+		System.out.println(account.toString()) ;*/
 
 
 	}
