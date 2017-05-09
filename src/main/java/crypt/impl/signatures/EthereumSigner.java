@@ -17,6 +17,8 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
         this.sync = sync ;
     }
 
+    //TODO : Utiliser getKey() pour signer la Tx ethereum
+
     @Override
     public EthereumKey getKey() {
         return super.key ;
@@ -25,7 +27,7 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
     @Override
     public EthereumSignature sign(byte[] message) {
 
-        CallSetSign signer = new CallSetSign(sync, contract, "signatureUser1") ;
+        CallSetSign signer = new CallSetSign(sync, contract, getKey(), "signatureUser1") ;
         signer.run() ;
 
         if(signer.getTx() == null) {

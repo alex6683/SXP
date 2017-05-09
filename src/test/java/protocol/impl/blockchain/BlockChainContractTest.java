@@ -4,10 +4,7 @@ import controller.Application;
 import crypt.api.hashs.Hasher;
 import crypt.factories.HasherFactory;
 import model.api.SyncManager;
-import model.entity.ContractEntity;
-import model.entity.EthereumKey;
-import model.entity.LoginToken;
-import model.entity.User;
+import model.entity.*;
 import model.syncManager.UserSyncManagerImpl;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -17,9 +14,7 @@ import org.spongycastle.util.encoders.Hex;
 import protocol.impl.blockChain.BlockChainContract;
 import rest.api.Authentifier;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by alex on 09/05/17.
@@ -32,7 +27,7 @@ public class BlockChainContractTest {
     public static final int N = 2;
 
     private ContractEntity contractEntity = new ContractEntity() ;
-    private BlockChainContract bcContract ;
+    private BlockChainContract bcContractA, bcContractB ;
 
     private ArrayList<String> setEntityContract(String... entity) {
         ArrayList<String> newEntities = new ArrayList<>() ;
@@ -122,7 +117,12 @@ public class BlockChainContractTest {
         contractEntity.setCreatedAt(new Date()) ;
         System.out.println("DATES : " + contractEntity.getCreatedAt()) ;
 
-        bcContract = new BlockChainContract(contractEntity) ;
+        ArrayList<EthereumKey> partis = new ArrayList<>() ;
+        partis.add(users[0].getEthKeys()) ;
+        partis.add(users[1].getEthKeys()) ;
+
+        bcContractA = new BlockChainContract(contractEntity, partis) ;
+
 
     }
 }

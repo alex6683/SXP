@@ -30,6 +30,8 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
     private EthereumContract ethContract ;
     private SyncBlockChain sync ;
 
+    private User currentUser ;
+
     public BlockChainEstablisher(String token, HashMap<EthereumKey, String> uri){
 
         // Matching the uris
@@ -38,17 +40,20 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         // Setup the signer
         Authentifier auth = Application.getInstance().getAuth();
         UserSyncManager users = new UserSyncManagerImpl();
-        User currentUser = users.getUser(auth.getLogin(token), auth.getPassword(token));
+        currentUser = users.getUser(auth.getLogin(token), auth.getPassword(token));
+        //System.out.println("ID : " + currentUser.getId()) ;
+        //System.out.println("PubK : " + currentUser.getEthKeys().toString()) ;
+
     }
 
     public void initialize(BlockChainContract bcContract, boolean deploy) {
         initialize(bcContract);
         if(deploy && !ethContract.isDeployed()) {
-            new DeployContract(sync, ethContract).run();
+            new DeployContract(sync, ethContract, super.signer.getKey()).run();
         }
     }
 
-    public void setContractAdrTo(EthereumContract eth1, EthereumContract eth2) {
+    /*public void setContractAdrTo(EthereumContract eth1, EthereumContract eth2) {
         if(eth1.isDeployed() && !eth2.isDeployed()) {
             eth2.setContractAdr(eth1.getContractAdr());
         }
@@ -61,14 +66,16 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-    }
+    }*/
 
     @Override
     public void initialize(BlockChainContract bcContract) {
         super.contract = bcContract ;
         ethContract = bcContract.getEthContract() ;
         sync = bcContract.getSync() ;
-        super.signer = new EthereumSigner(ethContract, sync);
+        super.signer = bcContract.getSigner() ;
+        super.signer.setKey(currentUser.getEthKeys());
+        bcContract.getSigner().setKey(currentUser.getEthKeys());
         sync.run() ;
 
         //RECEIV THE CONTRACT ADDRESS ON BLOCKCHAIN AND SAVE IT.

@@ -10,6 +10,8 @@ import model.api.Status;
 import model.entity.ContractEntity;
 import model.entity.EthereumKey;
 import model.entity.User;
+import org.ethereum.util.ByteUtil;
+import org.spongycastle.util.encoders.Hex;
 import protocol.api.EstablisherContract;
 
 import java.math.BigInteger;
@@ -39,7 +41,27 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         date = contract.getCreatedAt() ;
         setParties(contract.getParties());
         setClauses(contract.getClauses()) ;
-        id = new String(this.getHashableData()) ;
+        id = getHashableData().toString() ;
+        contract.setTitle(id);
+        ethContract = new EthereumContract() ;
+        sync = new SyncBlockChain(Config.class) ;
+        signer = new EthereumSigner(ethContract, sync) ;
+    }
+
+    @Deprecated
+    public BlockChainContract(ContractEntity contract, ArrayList<EthereumKey> part) {
+        super() ;
+        super.contract = contract ;
+        date = contract.getCreatedAt() ;
+        parties.addAll(part) ;
+        int i=0 ;
+        for(EthereumKey tmp : part) {
+            partiesName.put(tmp, contract.getParties().get(i)) ;
+            i++ ;
+        }
+        setClauses(contract.getClauses()) ;
+        id = getHashableData().toString() ;
+        contract.setTitle(id);
         ethContract = new EthereumContract() ;
         sync = new SyncBlockChain(Config.class) ;
         signer = new EthereumSigner(ethContract, sync) ;
@@ -48,10 +70,14 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
     public void setParties(ArrayList<String> partiesEntity){
         for (String part : partiesEntity){
             JsonTools<User> json = new JsonTools<>(new TypeReference<User>(){});
-            Users users = new Users();
-            User user = json.toEntity(users.get(part));
-            this.parties.add(user.getEthKeys());
-            this.partiesName.put(user.getEthKeys(), user.getId());
+            User user = json.toEntity(part) ;
+            System.out.println("USER ? : " + user) ;
+            //Users users = new Users();
+            //System.out.println("USERS ? " + user.getId()) ;
+            //User user = json.toEntity(users.get(part));
+            //System.out.println("User ID ENTITY " + user.getId()) ;
+            //this.parties.add(user.getEthKeys());
+            //this.partiesName.put(user.getEthKeys(), user.getId());
         }
     }
 

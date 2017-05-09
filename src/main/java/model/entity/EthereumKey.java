@@ -22,16 +22,17 @@ import java.math.BigInteger;
 // TODO : Utiliser Hex ou byte[] plutot que BigInteger !
 
 public class EthereumKey extends ECKey implements AsymKey<BigInteger>, Serializable {
-    //@NotNull
+
 	@XmlElement(name="privateKey")
-	@JsonSerialize(using=controller.tools.BigIntegerSerializer.class)
+    //@NotNull
+    @JsonSerialize(using=controller.tools.BigIntegerSerializer.class)
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JsonIgnore
     private BigInteger privateKey;
 
-    //@NotNull
     @XmlElement(name="publicKey")
-	@JsonSerialize(using=controller.tools.BigIntegerSerializer.class)
+    //@NotNull
+    @JsonSerialize(using=controller.tools.BigIntegerSerializer.class)
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     private BigInteger publicKey;
 
