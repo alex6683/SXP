@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import crypt.api.key.AsymKey;
+import org.bouncycastle.pqc.math.linearalgebra.BigIntUtils;
 import org.ethereum.crypto.ECKey;
+import org.ethereum.util.ByteUtil;
+import org.ethereum.util.Utils;
+import org.spongycastle.util.encoders.Hex;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
@@ -58,5 +62,6 @@ public class EthereumKey extends ECKey implements AsymKey<BigInteger>, Serializa
         return ECKey.fromPrivate(privateKey) ;
     }
 
+    public String toString() {return Hex.toHexString(ByteUtil.bigIntegerToBytes(publicKey)) ; }
 
 }

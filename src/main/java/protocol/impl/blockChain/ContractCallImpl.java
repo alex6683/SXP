@@ -1,5 +1,6 @@
 package protocol.impl.blockChain;
 
+import model.entity.EthereumKey;
 import org.ethereum.core.CallTransaction;
 import org.ethereum.core.TransactionReceipt;
 import org.ethereum.vm.program.ProgramResult;
@@ -13,8 +14,15 @@ public class ContractCallImpl extends SendTransaction {
     private CallTransaction.Contract contractCall ;
     private EthereumContract contract ;
 
+    @Deprecated
     public ContractCallImpl(SyncBlockChain ethereum, EthereumContract contract) {
         super(ethereum);
+        this.contract = contract ;
+        contractCall = new CallTransaction.Contract(contract.getContractMetadata().abi);
+    }
+
+    public ContractCallImpl(SyncBlockChain ethereum, EthereumContract contract, EthereumKey keys) {
+        super(ethereum, keys);
         this.contract = contract ;
         contractCall = new CallTransaction.Contract(contract.getContractMetadata().abi);
     }

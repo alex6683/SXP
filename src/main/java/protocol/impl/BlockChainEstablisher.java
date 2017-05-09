@@ -39,8 +39,6 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         Authentifier auth = Application.getInstance().getAuth();
         UserSyncManager users = new UserSyncManagerImpl();
         User currentUser = users.getUser(auth.getLogin(token), auth.getPassword(token));
-        super.signer = new EthereumSigner(ethContract, sync);
-        super.signer.setKey(currentUser.getEthKeys());
     }
 
     public void initialize(BlockChainContract bcContract, boolean deploy) {
@@ -69,7 +67,8 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
     public void initialize(BlockChainContract bcContract) {
         super.contract = bcContract ;
         ethContract = bcContract.getEthContract() ;
-        sync = new SyncBlockChain(Config.class) ;
+        sync = bcContract.getSync() ;
+        super.signer = new EthereumSigner(ethContract, sync);
         sync.run() ;
 
         //RECEIV THE CONTRACT ADDRESS ON BLOCKCHAIN AND SAVE IT.

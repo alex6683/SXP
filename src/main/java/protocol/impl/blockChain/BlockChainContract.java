@@ -60,6 +60,10 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
     }
 
     //GETTERS////
+
+    public SyncBlockChain getSync() {
+        return sync;
+    }
     public EthereumContract getEthContract() {
         return ethContract;
     }

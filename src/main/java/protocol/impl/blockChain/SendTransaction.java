@@ -22,10 +22,17 @@ public abstract class SendTransaction {
             Collections.synchronizedMap(new HashMap<ByteArrayWrapper, TransactionReceipt>());
     protected long numBlock ;
 
-    private EthereumKey senderKeys ;
+    //TODO : Utiliser sender key ici plutot que dans EthereumContract
+    private ECKey senderECKey ;
 
+    @Deprecated
     public SendTransaction(SyncBlockChain ethereum) {
         sync = ethereum ;
+    }
+
+    public SendTransaction(SyncBlockChain ethereum, EthereumKey keys) {
+        sync = ethereum ;
+        senderECKey = keys.getPrivECKey() ;
     }
 
     public TransactionReceipt sendTxAndWait(ECKey senderAddress, byte[] receiveAddress, byte[] data) throws Exception {
