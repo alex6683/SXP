@@ -31,7 +31,6 @@ public class Config {
                     "peer.p2p.eip8 = true \n" +
                     "peer.networkId = 3 \n" +
                     "sync.enabled = true \n" +
-                    "sync.fast.enabled = true \n" +
                     "genesis = ropsten.json \n" +
                     "blockchain.config.name = 'ropsten' \n" +
                     "database.dir = database-ropsten";

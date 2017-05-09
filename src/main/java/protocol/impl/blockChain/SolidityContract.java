@@ -58,12 +58,12 @@ public class SolidityContract {
                "        member2.clauseB = clause2;\n" +
                "    }\n" +
                "    \n" +
-               "    function getAdd() constant returns(bool add) {\n" +
+               "    function getAdd() constant returns(address add) {\n" +
                "        if(msg.sender == member1.add)\n" +
-               "            return true;\n" +
+               "            return member1.add;\n" +
                "        if(msg.sender == member2.add)\n" +
-               "            return true;\n" +
-               "        return false;\n" +
+               "            return member2.add;\n" +
+               "        return msg.sender;\n" +
                "    }\n" +
                "    \n" +
                "    function getItem() constant returns(string item){\n" +
