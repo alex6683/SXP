@@ -81,7 +81,6 @@ public class SigmaEstablisherTest {
 			keysR[k].setG(key.getG());
 			keysR[k].setP(key.getP());
 			keysR[k].setPublicKey(key.getPublicKey());
-			
 			uris.put(keysR[k], uri);
 		}
 
@@ -101,6 +100,7 @@ public class SigmaEstablisherTest {
 		
 		for (int k=0; k<N; k++){
 			Authentifier auth = Application.getInstance().getAuth();
+			System.out.println("TOKEN Test : " + auth.getToken(logins[k], passwords[k])) ;
 			sigmaE[k] = new SigmaEstablisher(auth.getToken(logins[k], passwords[k]), uris);
 			sigmaE[k].initialize(c[k]);
 		}

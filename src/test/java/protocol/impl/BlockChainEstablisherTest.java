@@ -2,6 +2,7 @@ package protocol.impl;
 
 import controller.Application;
 import crypt.api.hashs.Hasher;
+import crypt.factories.ElGamalAsymKeyFactory;
 import crypt.factories.HasherFactory;
 import model.api.SyncManager;
 import model.entity.ContractEntity;
@@ -76,39 +77,35 @@ public class BlockChainEstablisherTest {
 
 
         // Creating the users
-        User[] users = new User[N];
+        User[] u = new User[N];
         String[] logins = new String[N];
         String[] passwords = new String[N];
-        ArrayList<String> parties = new ArrayList<>();
-        for (int i = 0; i < N; i++) {
-            logins[i] = createString(5);
-            passwords[i] = createString(10);
+        for (int k=0; k<N; k++){
+            logins[k] = createString(5);
+            passwords[k] = createString(10);
 
-            users[i] = new User();
-            users[i].setNick(logins[i]);
+            u[k] = new User();
+            u[k].setNick(logins[k]);
             Hasher hasher = HasherFactory.createDefaultHasher();
-            users[i].setSalt(HasherFactory.generateSalt());
-            hasher.setSalt(users[i].getSalt());
-            users[i].setPasswordHash(hasher.getHash(passwords[i].getBytes()));
-            users[i].setCreatedAt(new Date());
-            //Attribute EthKeys
-            if (i == 0)
-                users[i].setEthKeys(keys0);
+            u[k].setSalt(HasherFactory.generateSalt());
+            hasher.setSalt(u[k].getSalt());
+            u[k].setPasswordHash(hasher.getHash(passwords[k].getBytes()));
+            u[k].setCreatedAt(new Date());
+            if(k==0)
+                u[k].setEthKeys(keys0);
             else
-                users[i].setEthKeys(keys1);
-
+                u[k].setEthKeys(keys1);
             SyncManager<User> em = new UserSyncManagerImpl();
             em.begin();
-            em.persist(users[i]);
+            em.persist(u[k]);
             em.end();
 
             Authentifier auth = Application.getInstance().getAuth();
             LoginToken token = new LoginToken();
-            token.setToken(auth.getToken(logins[i], passwords[i]));
-            token.setUserid(users[i].getId());
-
-            parties.add(users[i].getId());
+            token.setToken(auth.getToken(logins[k], passwords[k]));
+            token.setUserid(u[k].getId());
         }
+        /*
         //Add Entity in Contract Entity
         contractEntity.setParties(parties);
         System.out.println("USERS : " + contractEntity.getParties().toString());
@@ -125,7 +122,7 @@ public class BlockChainEstablisherTest {
         ArrayList<EthereumKey> partis = new ArrayList<>();
         partis.add(users[0].getEthKeys());
         partis.add(users[1].getEthKeys());
-
+*/
         BlockChainContract[] c = new BlockChainContract[N];
 
        /* bcContractA = new BlockChainContract(contractEntity, partis);
@@ -137,9 +134,7 @@ public class BlockChainEstablisherTest {
 
 
         for (int i = 0; i < N; i++) {
-            EthereumKey key = users[i].getEthKeys();
-            System.out.println(i + key.toString());
-            System.out.println(i + uri);
+            EthereumKey key = u[i].getEthKeys();
             uris.put(key, uri);
         }
 
@@ -149,10 +144,9 @@ public class BlockChainEstablisherTest {
         for (int k = 0; k < N; k++) {
             Authentifier auth = Application.getInstance().getAuth();
             sigmaE[k] = new BlockChainEstablisher(auth.getToken(logins[k], passwords[k]), uris);
+            System.out.println("TOKEN Test : " + auth.getToken(logins[k], passwords[k])) ;
             sigmaE[k].initialize(c[k]);
         }
-    }
-}
 /*
 
         BlockChainEstablisher bcEstablisherA ;
@@ -167,7 +161,7 @@ public class BlockChainEstablisherTest {
         auth = Application.getInstance().getAuth();
         bcEstablisherB = new BlockChainEstablisher(auth.getToken(logins[1], passwords[1]), uris);
         bcEstablisherB.initialize(bcContractB, false);
-        *//*
+        */
 
 
     }
