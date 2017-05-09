@@ -3,6 +3,7 @@ package controller;
 import java.util.Properties;
 
 import controller.tools.LoggerUtilities;
+import crypt.impl.key.CreateEthAsymKey;
 import model.entity.ContractEntity;
 import model.syncManager.UserSyncManagerImpl;
 import network.api.Peer;
@@ -62,15 +63,17 @@ public class Application {
 		//new Application();
 		//Application.getInstance().runForTests(8081);
 
-		SyncBlockChain sync = new SyncBlockChain(Config.class) ;
+		/*SyncBlockChain sync = new SyncBlockChain(Config.class) ;
 
 		sync.run();
 
 		EthereumContract eth = new EthereumContract() ;
 
-		new DeployContract(sync, eth).run();
+		new DeployContract(sync, eth).run();*/
 
-		sync.closeSync();
+		CreateEthAsymKey account = new CreateEthAsymKey() ;
+		System.out.println(account.toString()) ;
+
 
 	}
 	

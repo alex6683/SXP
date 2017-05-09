@@ -14,6 +14,9 @@ import java.math.BigInteger;
 /**
  * Created by alex on 18/04/17.
  */
+
+// TODO : Utiliser Hex ou byte[] plutot que BigInteger !
+
 public class EthereumKey extends ECKey implements AsymKey<BigInteger>, Serializable {
     //@NotNull
 	@XmlElement(name="privateKey")
