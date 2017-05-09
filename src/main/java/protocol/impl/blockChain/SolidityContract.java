@@ -7,9 +7,108 @@ import model.entity.ContractEntity;
  */
 public class SolidityContract {
 
-    private ContractEntity entity ;
+    public static String soliditySrc =
 
-    public static String soliditySrc = "contract Signature {" +
+       /*"pragma solidity ^0.4.8;\n" +
+               "\n" +
+               "contract Calcul {\n" +
+               "    struct Stock {\n" +
+               "        int a;\n" +
+               "        int b;\n" +
+               "        int res;\n" +
+               "    }\n" +
+               "    \n" +
+               "    Stock public st;\n" +
+               "    \n" +
+               "    function Calcul(int first, int second, int result) {\n" +
+               "        initStruct(first, second, result);\n" +
+               "    }\n" +
+               "    \n" +
+               "    function initStruct(int first, int second, int result) internal {\n" +
+               "        st = Stock({a:first, b:second, res:result});\n" +
+               "    }\n" +
+               "    \n" +
+               "    function checkRes() returns(bool isTrue) {\n" +
+               "        if(st.res == (st.a + st.b))\n" +
+               "            return true;\n" +
+               "        \n" +
+               "        return false;\n" +
+               "    }\n" +
+               "}"; */
+
+       "pragma solidity ^0.4.8;\n" +
+               "contract Trade {\n" +
+               "    struct Member {\n" +
+               "        address add;\n" +
+               "        string item;\n" +
+               "        bool signed;\n" +
+               "        string clauseA;\n" +
+               "        string clauseB;\n" +
+               "    }\n" +
+               "        Member public member1;\n" +
+               "        Member public member2;\n" +
+               "        \n" +
+               "    \n" +
+               "        function init(address add1, address add2, string item1, string item2, string clause1, string clause2) {\n" +
+               "            member1 = Member({add: msg.sender, item: item1, signed: false, clauseA: clause1, clauseB: clause2});\n" +
+               "            member1.add = add1;\n" +
+               "            member1.item = item1;\n" +
+               "            member2 = Member({add: add2, item: item2, signed: false, clauseA: clause1, clauseB: clause2});\n" +
+               "            member2.item = item2;\n" +
+               "            member2.add = add2;\n" +
+               "            member1.clauseA = clause1;\n" +
+               "            member2.clauseB = clause2;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function signature1() {\n" +
+               "            member1.signed = true;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function signature2() {\n" +
+               "            member2.signed = true;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getMsgSender() constant returns(address add) {\n" +
+               "            return msg.sender;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getAdd1() constant returns(address add) {\n" +
+               "            return member1.add;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getAdd2() constant returns(address add) {\n" +
+               "            return member2.add;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getItem1() constant returns(string item) {\n" +
+               "            return member1.item;\n" +
+               "        }\n" +
+               "    \n" +
+               "        function getItem2() constant returns(string item) {\n" +
+               "            return member2.item;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getSignature1() constant returns(bool signed) {\n" +
+               "            return member1.signed;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getSignature2() constant returns(bool signed) {\n" +
+               "            return member2.signed;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getClauseA() constant returns(string clause) {\n" +
+               "            return member1.clauseA;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getClauseB() constant returns(string clause) {\n" +
+               "            return member1.clauseB;\n" +
+               "        }\n" +
+               "}";
+
+
+
+            /*"contract Signature {" +
+
 
                     "   function Signature(){ }" +
                     "   bool public signedUser1 = false ; " +
@@ -22,7 +121,7 @@ public class SolidityContract {
                     "       signedUser1 = true ; " +
                     "   } " +
 
-                    "} " ;
+                    "} " ;*/
 
 
 
