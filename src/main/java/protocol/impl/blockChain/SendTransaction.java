@@ -35,6 +35,7 @@ public abstract class SendTransaction {
         senderECKey = keys.getPrivECKey() ;
     }
 
+    @Deprecated
     public TransactionReceipt sendTxAndWait(ECKey senderAddress, byte[] receiveAddress, byte[] data) throws Exception {
         BigInteger nonce = sync.getEthereum().getRepository().getNonce(senderAddress.getAddress());
         Transaction tx = new Transaction(
@@ -50,6 +51,27 @@ public abstract class SendTransaction {
                 data,
                 sync.getEthereum().getChainIdForNextBlock());
         tx.sign(senderAddress);
+
+        sync.getEthereum().submitTransaction(tx);
+
+        return waitForTx(tx.getHash());
+    }
+
+    public TransactionReceipt sendTxAndWait(byte[] receiveAddress, byte[] data) throws Exception {
+        BigInteger nonce = sync.getEthereum().getRepository().getNonce(senderECKey.getAddress());
+        Transaction tx = new Transaction(
+                //Nonce
+                ByteUtil.bigIntegerToBytes(nonce),
+                //GasPrice
+                ByteUtil.longToBytesNoLeadZeroes(sync.getEthereum().getGasPrice()),
+                //GasLimit
+                ByteUtil.longToBytesNoLeadZeroes(3_000_000),
+                receiveAddress,
+                //value
+                ByteUtil.ZERO_BYTE_ARRAY,
+                data,
+                sync.getEthereum().getChainIdForNextBlock());
+        tx.sign(senderECKey);
 
         sync.getEthereum().submitTransaction(tx);
 
