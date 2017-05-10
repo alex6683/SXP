@@ -34,7 +34,7 @@ public class ContractCallImpl extends SendTransaction {
         byte[] functionCallBytes = function.encode(args);
         TransactionReceipt receipt1 = sendTxAndWait(contract.getSender(), contract.getContractAdr(), functionCallBytes);
         if (!receipt1.isSuccessful()) {
-            System.err.println("Some troubles launching constructor: " + receipt1.getError() + contractCall.getConstructor().name);
+            System.err.println("Some troubles launching constructor: " + receipt1.getError() + contractCall.getConstructor().name + " Function : " + function.type.name());
             return;
         }
     }
@@ -45,7 +45,7 @@ public class ContractCallImpl extends SendTransaction {
         byte[] functionCallBytes = fct.encode(args);
         TransactionReceipt receipt2 = sendTxAndWait(contract.getSender(), contract.getContractAdr(), functionCallBytes);
         if (!receipt2.isSuccessful()) {
-            System.err.println("Some troubles calling a contract function : " + receipt2.getError());
+            System.err.println("Some troubles calling a contract function : " + receipt2.getError() + " Function : " + func);
             return;
         }
     }

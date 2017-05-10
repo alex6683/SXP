@@ -24,6 +24,10 @@ public class SolidityContract {
                "        initStruct(first, second, result);\n" +
                "    }\n" +
                "    \n" +
+               "    function getMsgSender() returns(address add) {\n" +
+               "        return msg.sender;\n" +
+               "    }\n" +
+               "    \n" +
                "    function initStruct(int first, int second, int result) internal {\n" +
                "        st = Stock({a:first, b:second, res:result});\n" +
                "    }\n" +
@@ -34,9 +38,82 @@ public class SolidityContract {
                "        \n" +
                "        return false;\n" +
                "    }\n" +
-               "}"; */
+               "}";*/
 
        "pragma solidity ^0.4.8;\n" +
+               "contract Trade {\n" +
+               "    struct Member {\n" +
+               "        address add;\n" +
+               "        string item;\n" +
+               "        bool signed;\n" +
+               "    }\n" +
+               "        Member public member1;\n" +
+               "        Member public member2;\n" +
+               "        string public clauseA;\n" +
+               "        string public clauseB;\n" +
+               "        address public sender;\n" +
+               "    \n" +
+               "        function init(address add1, address add2, string item1, string item2, string clause1, string clause2) {\n" +
+               "            sender = msg.sender;\n" +
+               "            if(msg.sender != sender || member1.add == add1)\n" +
+               "                throw;\n" +
+               "            member1.add = add1;\n" +
+               "            member1.item = item1;\n" +
+               "            member2.add = add2;\n" +
+               "            member2.item = item2;\n" +
+               "            clauseA = clause1;  \n" +
+               "            clauseB = clause2;\n" +
+               "            \n" +
+               "        }\n" +
+               "        \n" +
+               "        function getSender() returns(address add) {\n" +
+               "            return sender;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function signature() {\n" +
+               "            sender = msg.sender;\n" +
+               "            if(member1.add == sender)\n" +
+               "                member1.signed = true;\n" +
+               "            else if(member2.add == sender)\n" +
+               "                member2.signed = true;\n" +
+               "            else throw;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getAdd1() constant returns(address add) {\n" +
+               "                return member1.add;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getAdd2() constant returns(address add) {\n" +
+               "            return member2.add;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getItem1() constant returns(string item) {\n" +
+               "            return member1.item;\n" +
+               "        }\n" +
+               "    \n" +
+               "        function getItem2() constant returns(string item) {\n" +
+               "            return member2.item;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getSignature() constant returns(bool signed) {\n" +
+               "              if(sender == member1.add)\n" +
+               "                return member1.signed;\n" +
+               "            else if(sender == member2.add)\n" +
+               "                return member2.signed;\n" +
+               "            else throw;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getClauseA() constant returns(string clause) {\n" +
+               "            return clauseA;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getClauseB() constant returns(string clause) {\n" +
+               "            return clauseB;\n" +
+               "        }\n" +
+               "}";
+
+       // WORKING CONTRACT
+      /* "pragma solidity ^0.4.8;\n" +
                "contract Trade {\n" +
                "    struct Member {\n" +
                "        address add;\n" +
@@ -47,6 +124,8 @@ public class SolidityContract {
                "    }\n" +
                "        Member public member1;\n" +
                "        Member public member2;\n" +
+               "        string public clauseA;\n" +
+               "        string public clauseB;\n" +
                "        address public member;\n" +
                "        \n" +
                "        modifier onlyMember {\n" +
@@ -54,28 +133,22 @@ public class SolidityContract {
                "                throw;\n" +
                "            _;\n" +
                "        }\n" +
-               "        \n" +
-               "        event checker(address msgSender, address add1, bool signed, string clause1);\n" +
                "    \n" +
                "        function init(address add1, address add2, string item1, string item2, string clause1, string clause2) {\n" +
-               "            member = msg.sender;\n" +
-               "            member1 = Member({add: msg.sender, item: item1, signed: false, clauseA: clause1, clauseB: clause2});\n" +
+               "            // member = msg.sender;\n" +
                "            member1.add = add1;\n" +
                "            member1.item = item1;\n" +
-               "            member2 = Member({add: add2, item: item2, signed: false, clauseA: clause1, clauseB: clause2});\n" +
-               "            member2.item = item2;\n" +
                "            member2.add = add2;\n" +
-               "            member1.clauseA = clause1;\n" +
-               "            member2.clauseB = clause2;\n" +
-               "            checker(msg.sender, add1, member1.signed, clause1);\n" +
+               "            member2.item = item2;\n" +
+               "            clauseA = clause1;  \n" +
+               "            clauseB = clause2;\n" +
                "        }\n" +
                "        \n" +
-               "        function signature1() onlyMember {\n" +
-               "            member1.signed = true;\n" +
-               "        }\n" +
-               "        \n" +
-               "        function signature2() onlyMember {\n" +
-               "            member2.signed = true;\n" +
+               "        function signature(address addr) {\n" +
+               "            if(member1.add == addr)\n" +
+               "                member1.signed = true;\n" +
+               "            if(member2.add == addr)\n" +
+               "                member2.signed = true;\n" +
                "        }\n" +
                "        \n" +
                "        function getTxSender() returns(address add) {\n" +
@@ -111,13 +184,13 @@ public class SolidityContract {
                "        }\n" +
                "        \n" +
                "        function getClauseA() constant returns(string clause) {\n" +
-               "            return member1.clauseA;\n" +
+               "            return clauseA;\n" +
                "        }\n" +
                "        \n" +
                "        function getClauseB() constant returns(string clause) {\n" +
-               "            return member1.clauseB;\n" +
+               "            return clauseB;\n" +
                "        }\n" +
-               "}";
+               "}";*/
 
 
 

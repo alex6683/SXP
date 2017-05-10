@@ -66,8 +66,10 @@ public class CallConstructor extends ContractCallImpl implements Runnable {
                     /*System.out.println("////////////// INCOMING /////////////////");
                     super.contractBlockChainConstructor( 2, 2, 4);
                     System.out.println("////////////// CONSTRUCTED //////////////");
-                    Object res = super.getReturnContract("checkRes").toString();
+                    Object res = super.getReturnContract("checkRes");
+                    byte[] add = (byte[]) super.getReturnContract("getMsgSender");
                     System.out.println("Calcul juste ? : " + res);
+                    System.out.println("msg.sender ? : " + ByteUtil.toHexString(add));
                     System.out.println("////////////// DONE     /////////////////");*/
 
                     System.out.println("////////////// INCOMING /////////////////");
@@ -75,8 +77,32 @@ public class CallConstructor extends ContractCallImpl implements Runnable {
                     super.callFunc("init", part1, part2, item1, item2, clause1, clause2);
                     System.out.println("////////////// CONSTRUCTED //////////////");
                     System.out.println("////////////// SIGNATURE /////////////////");
-                    super.callFunc("signature1");
-                    super.callFunc("signature2");
+                    super.callFunc("signature");
+                    super.callFunc("signature");
+                    System.out.println("////////////// GETTERS  /////////////////");
+                    byte[] Add1 = (byte[])  super.getReturnContract("getAdd1");
+                    byte[] Add2 = (byte[]) super.getReturnContract("getAdd2");
+                    byte[] sender = (byte[]) super.getReturnContract("getSender");
+                    System.out.println("Sender : " + ByteUtil.toHexString(sender));
+                    System.out.println("Adresse 1 : " + ByteUtil.toHexString(Add1));
+                    System.out.println("Adresse 2 : " + ByteUtil.toHexString(Add2));
+                    System.out.println("Item1 : " + super.getReturnContract("getItem1"));
+                    System.out.println("Item2 : " + super.getReturnContract("getItem2"));
+                    System.out.println("Signature1 : " + super.getReturnContract("getSignature"));
+                    System.out.println("Signature2 : " + super.getReturnContract("getSignature"));
+                    System.out.println("Clause A : " + super.getReturnContract("getClauseA"));
+                    System.out.println("Clause B : " + super.getReturnContract("getClauseB"));
+
+                    System.out.println("////////////// DONE     /////////////////");
+
+                    // WORKING CALLS
+                   /* System.out.println("////////////// INCOMING /////////////////");
+                    System.out.println(part1 + " / " +  part2 + " / " + item1 + " / " + item2 +  " / " + clause1 + " / " + clause2);
+                    super.callFunc("init", part1, part2, item1, item2, clause1, clause2);
+                    System.out.println("////////////// CONSTRUCTED //////////////");
+                    System.out.println("////////////// SIGNATURE /////////////////");
+                    super.callFunc("signature", part1);
+                    super.callFunc("signature", part2);
                     System.out.println("////////////// GETTERS  /////////////////");
                     byte[] msgSender = (byte[])  super.getReturnContract("getAdd1");
                     byte[] Add1 = (byte[]) super.getReturnContract("getAdd2");
@@ -94,7 +120,7 @@ public class CallConstructor extends ContractCallImpl implements Runnable {
                     System.out.println("Clause A : " + super.getReturnContract("getClauseA"));
                     System.out.println("Clause B : " + super.getReturnContract("getClauseB"));
 
-                    System.out.println("////////////// DONE     /////////////////");
+                    System.out.println("////////////// DONE     /////////////////");*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
