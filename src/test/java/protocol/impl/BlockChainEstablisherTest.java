@@ -131,13 +131,11 @@ public class BlockChainEstablisherTest {
         BlockChainEstablisher bcEstablisherA = new BlockChainEstablisher(users[0], uris);
         BlockChainEstablisher bcEstablisherB = new BlockChainEstablisher(users[1], uris);
 
-        bcEstablisherA.initialize(bcContractA);
-        bcEstablisherB.initialize(bcContractB);
-
-        System.out.println("SignerKeyA : " + bcEstablisherA.getSigner().getKey().toString()) ;
-        System.out.println("SignerKeyB : " + bcEstablisherB.getSigner().getKey().toString()) ;
+        bcEstablisherA.initialize(bcContractA, true);
+        bcEstablisherB.initialize(bcContractB, false);
 
 
+        bcEstablisherA.stopSync();
     }
 
 }

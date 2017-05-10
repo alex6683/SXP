@@ -16,10 +16,7 @@ import network.factories.AdvertisementFactory;
 import org.ethereum.util.ByteUtil;
 import org.spongycastle.util.encoders.Hex;
 import protocol.api.Establisher;
-import protocol.impl.blockChain.BlockChainContract;
-import protocol.impl.blockChain.DeployContract;
-import protocol.impl.blockChain.EthereumContract;
-import protocol.impl.blockChain.SyncBlockChain;
+import protocol.impl.blockChain.*;
 import rest.api.Authentifier;
 
 import java.math.BigInteger;
@@ -49,11 +46,13 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
 
     @Override
     public void initialize(BlockChainContract bcContract) {
-        bcContract.getSigner().setKey(establisherUser.getEthKeys());
         super.contract = bcContract ;
-        super.signer = contract.getSigner() ;
-        ethContract = bcContract.getEthContract() ;
-        sync = bcContract.getSync() ;
+        ethContract = new EthereumContract(establisherUser.getEthKeys()) ;
+        sync = new SyncBlockChain(Config.class) ;
+        super.signer = new EthereumSigner(ethContract, sync) ;
+        super.signer.setKey(establisherUser.getEthKeys()) ;
+        bcContract.setSigner(super.signer);
+        sync.run();
     }
 
     public void initialize(BlockChainContract bcContract, boolean deploy) {
@@ -72,7 +71,9 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         }, establisherUser.getEthKeys().toString())  ;
 
         if(deploy && !ethContract.isDeployed()) {
-            new DeployContract(sync, ethContract, establisherUser.getEthKeys()) ;
+            if(sync.getEthereum() == null)
+                System.out.println("SyncNULL") ;
+            new DeployContract(sync, ethContract, establisherUser.getEthKeys()).run();
         }
     }
 
@@ -83,6 +84,10 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         EstablisherAdvertisementInterface cadv = AdvertisementFactory.createEstablisherAdvertisement();
         cadv.setTitle("Un Contrat");
         cadv.publish(peer);
+    }
+
+    public void stopSync() {
+        sync.closeSync();
     }
 
     public EthereumSigner getSigner() {
