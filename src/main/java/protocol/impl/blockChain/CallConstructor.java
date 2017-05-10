@@ -81,10 +81,12 @@ public class CallConstructor extends ContractCallImpl implements Runnable {
                     byte[] msgSender = (byte[])  super.getReturnContract("getAdd1");
                     byte[] Add1 = (byte[]) super.getReturnContract("getAdd2");
                     byte[] msgSenderSolidity = (byte[]) super.getReturnContract("getMsgSender");
+                    byte[] txSender = (byte[]) super.getReturnContract("getTxSender");
                     System.out.println("Adresse 1 : " + ByteUtil.toHexString(msgSender));
                     System.out.println("Adresse 2 : " + ByteUtil.toHexString(Add1));
-                    System.out.println("MsgSender : " + ByteUtil.toHexString(msgSenderSolidity));
-                    System.out.println("msg.sender : " + ByteUtil.toHexString(super.contract.getSender().getAddress()) + "public : " + ByteUtil.toHexString(super.contract.getSender().getPubKey()));
+                    System.out.println("msg.sender : " + ByteUtil.toHexString(msgSenderSolidity));
+                    System.out.println("Tx Sender : " + ByteUtil.toHexString(txSender));
+                    System.out.println("MsgSender : " + ByteUtil.toHexString(super.contract.getSender().getAddress()) + "public : " + ByteUtil.toHexString(super.contract.getSender().getPubKey()));
                     System.out.println("Item1 : " + super.getReturnContract("getItem1"));
                     System.out.println("Item2 : " + super.getReturnContract("getItem2"));
                     System.out.println("Signature1 : " + super.getReturnContract("getSignature1"));

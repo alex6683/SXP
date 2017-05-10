@@ -47,9 +47,18 @@ public class SolidityContract {
                "    }\n" +
                "        Member public member1;\n" +
                "        Member public member2;\n" +
+               "        address public member;\n" +
                "        \n" +
+               "        modifier onlyMember {\n" +
+               "            if(msg.sender != member)\n" +
+               "                throw;\n" +
+               "            _;\n" +
+               "        }\n" +
+               "        \n" +
+               "        event checker(address msgSender, address add1, bool signed, string clause1);\n" +
                "    \n" +
                "        function init(address add1, address add2, string item1, string item2, string clause1, string clause2) {\n" +
+               "            member = msg.sender;\n" +
                "            member1 = Member({add: msg.sender, item: item1, signed: false, clauseA: clause1, clauseB: clause2});\n" +
                "            member1.add = add1;\n" +
                "            member1.item = item1;\n" +
@@ -58,17 +67,22 @@ public class SolidityContract {
                "            member2.add = add2;\n" +
                "            member1.clauseA = clause1;\n" +
                "            member2.clauseB = clause2;\n" +
+               "            checker(msg.sender, add1, member1.signed, clause1);\n" +
                "        }\n" +
                "        \n" +
-               "        function signature1() {\n" +
+               "        function signature1() onlyMember {\n" +
                "            member1.signed = true;\n" +
                "        }\n" +
                "        \n" +
-               "        function signature2() {\n" +
+               "        function signature2() onlyMember {\n" +
                "            member2.signed = true;\n" +
                "        }\n" +
                "        \n" +
-               "        function getMsgSender() constant returns(address add) {\n" +
+               "        function getTxSender() returns(address add) {\n" +
+               "            return tx.origin;\n" +
+               "        }\n" +
+               "        \n" +
+               "        function getMsgSender() returns(address add) {\n" +
                "            return msg.sender;\n" +
                "        }\n" +
                "        \n" +
