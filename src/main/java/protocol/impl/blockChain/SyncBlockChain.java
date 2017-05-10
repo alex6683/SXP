@@ -29,7 +29,7 @@ public class SyncBlockChain implements Runnable {
 
     public void closeSync() {
         ethereum.close();
-        System.exit(1);
+        return ;
     }
 
     @Override

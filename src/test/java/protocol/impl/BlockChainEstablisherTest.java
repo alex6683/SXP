@@ -2,34 +2,26 @@ package protocol.impl;
 
 import controller.Application;
 import crypt.api.hashs.Hasher;
-import crypt.factories.ElGamalAsymKeyFactory;
 import crypt.factories.HasherFactory;
 import model.api.SyncManager;
 import model.entity.ContractEntity;
 import model.entity.EthereumKey;
-import model.entity.LoginToken;
 import model.entity.User;
 import model.syncManager.UserSyncManagerImpl;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.ethereum.util.ByteUtil;
 import org.junit.Test;
 import org.spongycastle.util.encoders.Hex;
-import protocol.impl.blockChain.BlockChainContract;
-import rest.api.Authentifier;
+import protocol.impl.blockChain.*;
 import util.TestInputGenerator;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Random;
 
 /**
  * Created by alex on 06/05/17.
  */
 public class BlockChainEstablisherTest {
-
-    private final static Logger log = LogManager.getLogger(BlockChainContract.class);
 
     public static final int N = 2;
 
@@ -113,29 +105,43 @@ public class BlockChainEstablisherTest {
         partis.add(users[0].getEthKeys());
         partis.add(users[1].getEthKeys());
 
-        BlockChainContract[] c = new BlockChainContract[N];
+
+        // Map of URIS
+        HashMap<EthereumKey, String> uris = new HashMap<>() ;
+        String uri = Application.getInstance().getPeer().getUri();
+        for (int k=0; k<N; k++){
+            EthereumKey key = new EthereumKey() ;
+            key.setPublicKey(users[k].getEthKeys().getPublicKey()) ;
+            uris.put(key, uri);
+        }
 
         bcContractA = new BlockChainContract(contractEntity[0], partis);
         bcContractB = new BlockChainContract(contractEntity[1], partis);
 
-        // Creating the map of URIS
-        String uri = Application.getInstance().getPeer().getUri();
-        HashMap<EthereumKey, String> uris = new HashMap<>();
 
-
-        for (int i = 0; i < N; i++) {
-            EthereumKey key = users[i].getEthKeys();
-            uris.put(key, uri);
-        }
-
-        BlockChainEstablisher bcEstablisherA = new BlockChainEstablisher(users[0], uris);
-        BlockChainEstablisher bcEstablisherB = new BlockChainEstablisher(users[1], uris);
+        BlockChainEstablisher bcEstablisherA = new BlockChainEstablisher(users[0], ConfigTestA.class, uris);
+        BlockChainEstablisher bcEstablisherB = new BlockChainEstablisher(users[1], ConfigTestB.class, uris);
 
         bcEstablisherA.initialize(bcContractA, true);
-        bcEstablisherB.initialize(bcContractB, false);
 
+        System.out.println("\n\nDeployed : " + ByteUtil.toHexString(bcEstablisherA.ethContract.getContractAdr())) ;
 
         bcEstablisherA.stopSync();
+
+        bcEstablisherB.initialize(bcContractB, false);
+
+        bcEstablisherB.stopSync();
+
+        bcEstablisherA.start() ;
+
+        //Time to sendContractAddr and set it
+        try{
+            Thread.sleep(1000);
+        }catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 }

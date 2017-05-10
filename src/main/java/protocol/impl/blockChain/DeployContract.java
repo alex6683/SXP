@@ -7,6 +7,7 @@ import org.ethereum.db.ByteArrayWrapper;
 import org.ethereum.listener.EthereumListenerAdapter;
 import org.spongycastle.util.encoders.Hex;
 
+import java.io.SyncFailedException;
 import java.util.List;
 
 import static java.lang.Thread.sleep;
@@ -30,7 +31,13 @@ public class DeployContract extends SendTransaction implements Runnable {
 
     @Override
     public void run() {
-        //sync.run() ;
+        if(sync.getEthereum()==null) {
+            try {
+                throw new SyncFailedException("Couldn't Deploy contract : check Synchronization") ;
+            } catch (SyncFailedException e) {
+                e.printStackTrace();
+            }
+        }
         sync.getEthereum().addListener(new EthereumListenerAdapter() {
             //Check for each new Block if current Transaction is included in it
             @Override

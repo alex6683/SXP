@@ -3,17 +3,13 @@ package controller;
 import java.util.Properties;
 
 import controller.tools.LoggerUtilities;
-import crypt.impl.key.CreateEthAsymKey;
-import model.entity.ContractEntity;
 import model.syncManager.UserSyncManagerImpl;
 import network.api.Peer;
 import network.factories.PeerFactory;
-import org.ethereum.util.ByteUtil;
-import protocol.impl.blockChain.*;
+import protocol.impl.blockChain.SyncBlockChain;
 import rest.api.Authentifier;
 import rest.factories.AuthentifierFactory;
 import rest.factories.RestServerFactory;
-
 
 /**
  * Main class
@@ -22,88 +18,71 @@ import rest.factories.RestServerFactory;
  *
  */
 public class Application {
-	private static Application instance = null;
-	private static UserSyncManagerImpl umg;
-	private Peer peer;
-	private Authentifier auth;
+    public final static int jxtaPort = 9801;
+    public final static int restPort = 8081;
 
-	public Application() {
-		if(instance != null) {
-			throw new RuntimeException("Application can be instanciate only once !");
-		}
-		instance = this;
-	}
-
-	public static Application getInstance()	{
-		return instance;
-	}
-
-	public void run() {
-		setPeer(PeerFactory.createDefaultAndStartPeer());
-		setAuth(AuthentifierFactory.createDefaultAuthentifier());
-		RestServerFactory.createAndStartDefaultRestServer(8080); //start the rest api
-	}
-
-	public void runForTests(int restPort) {
-		Properties p = System.getProperties();
-		p.put("derby.system.home", "./.db-" + restPort + "/");
-		umg = new UserSyncManagerImpl(); //just init the db
-		umg.close();
-		umg = null;
-		try {
-
-			setPeer(PeerFactory.createDefaultAndStartPeerForTest());
-			setAuth(AuthentifierFactory.createDefaultAuthentifier());
-			RestServerFactory.createAndStartDefaultRestServer(restPort);
-		} catch (Exception e) {
-			LoggerUtilities.logStackTrace(e);
-		}		
-	}
-
-	public static void main(String[] args) throws InterruptedException {
-		/*new Application();
-		Application.getInstance().runForTests(8081);*/
-
-		SyncBlockChain sync = new SyncBlockChain(Config.class) ;
-
-		sync.run();
-
-		EthereumContract contract = new EthereumContract() ;
-
-		new DeployContract(sync, contract).run();
-
-		new CallConstructor(sync, contract,
-				ByteUtil.hexStringToBytes("0x0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f"),
-				ByteUtil.hexStringToBytes("0x49a337147d9249ffe437a780fd6ba1ffd3e2bdad"),
-				"velo",
-				"carotte",
-				"IZI",
-				"OKLM"
-				).run() ;
+    private static Application instance = null;
+    private static UserSyncManagerImpl umg;
+    private Peer peer;
+    private Authentifier auth;
 
 
-		//Thread.currentThread().sleep(5000);
-		//sync.closeSync();
-	}
-	
-	public void stop(){
-		peer.stop();
-		instance = null;
-	}
-	
-	public Peer getPeer() {
-		return peer;
-	}
 
-	public void setPeer(Peer peer) {
-		this.peer = peer;
-	}
+    public Application() {
+        if(instance != null) {
+            throw new RuntimeException("Application can be instanciate only once !");
+        }
+        instance = this;
+    }
 
-	public Authentifier getAuth() {
-		return auth;
-	}
+    public static Application getInstance()	{
+        return instance;
+    }
 
-	public void setAuth(Authentifier auth) {
-		this.auth = auth;
-	}
+    public void run() {
+        setPeer(PeerFactory.createDefaultAndStartPeer());
+        setAuth(AuthentifierFactory.createDefaultAuthentifier());
+        RestServerFactory.createAndStartDefaultRestServer(8080); //start the rest api
+    }
+
+    public void runForTests(int restPort) {
+        Properties p = System.getProperties();
+        p.put("derby.system.home", "./.db-" + restPort + "/");
+        umg = new UserSyncManagerImpl(); //just init the db
+        umg.close();
+        umg = null;
+        try {
+            setPeer(PeerFactory.createDefaultAndStartPeerForTest());
+            setAuth(AuthentifierFactory.createDefaultAuthentifier());
+            RestServerFactory.createAndStartDefaultRestServer(restPort);
+        } catch (Exception e) {
+            LoggerUtilities.logStackTrace(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        new Application();
+        Application.getInstance().runForTests(restPort);
+    }
+
+    public void stop(){
+        peer.stop();
+        instance = null;
+    }
+
+    public Peer getPeer() {
+        return peer;
+    }
+
+    public void setPeer(Peer peer) {
+        this.peer = peer;
+    }
+
+    public Authentifier getAuth() {
+        return auth;
+    }
+
+    public void setAuth(Authentifier auth) {
+        this.auth = auth;
+    }
 }
