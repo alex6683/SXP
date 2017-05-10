@@ -2,34 +2,28 @@ package protocol.impl;
 
 import controller.Application;
 import crypt.api.hashs.Hasher;
-import crypt.factories.ElGamalAsymKeyFactory;
 import crypt.factories.HasherFactory;
 import model.api.SyncManager;
 import model.entity.ContractEntity;
 import model.entity.EthereumKey;
-import model.entity.LoginToken;
 import model.entity.User;
 import model.syncManager.UserSyncManagerImpl;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.ethereum.util.ByteUtil;
 import org.junit.Test;
 import org.spongycastle.util.encoders.Hex;
 import protocol.impl.blockChain.BlockChainContract;
-import rest.api.Authentifier;
+import protocol.impl.blockChain.Config;
+import protocol.impl.blockChain.ConfigTestA;
+import protocol.impl.blockChain.ConfigTestB;
 import util.TestInputGenerator;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Random;
 
 /**
  * Created by alex on 06/05/17.
  */
 public class BlockChainEstablisherTest {
-
-    private final static Logger log = LogManager.getLogger(BlockChainContract.class);
 
     public static final int N = 2;
 
@@ -118,24 +112,21 @@ public class BlockChainEstablisherTest {
         bcContractA = new BlockChainContract(contractEntity[0], partis);
         bcContractB = new BlockChainContract(contractEntity[1], partis);
 
-        // Creating the map of URIS
-        String uri = Application.getInstance().getPeer().getUri();
-        HashMap<EthereumKey, String> uris = new HashMap<>();
 
-
-        for (int i = 0; i < N; i++) {
-            EthereumKey key = users[i].getEthKeys();
-            uris.put(key, uri);
-        }
-
-        BlockChainEstablisher bcEstablisherA = new BlockChainEstablisher(users[0], uris);
-        BlockChainEstablisher bcEstablisherB = new BlockChainEstablisher(users[1], uris);
+        BlockChainEstablisher bcEstablisherA = new BlockChainEstablisher(users[0], ConfigTestA.class);
+        BlockChainEstablisher bcEstablisherB = new BlockChainEstablisher(users[1], ConfigTestB.class);
 
         bcEstablisherA.initialize(bcContractA, true);
-        bcEstablisherB.initialize(bcContractB, false);
 
+        System.out.println("\n\nDeployed : " + bcEstablisherA.ethContract.isDeployed()) ;
 
         bcEstablisherA.stopSync();
+
+        bcEstablisherB.initialize(bcContractB, true);
+
+        bcEstablisherB.stopSync();
+
+        bcEstablisherA.start() ;
     }
 
 }

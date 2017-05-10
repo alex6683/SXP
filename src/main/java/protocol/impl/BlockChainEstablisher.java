@@ -20,6 +20,7 @@ import protocol.impl.blockChain.*;
 import rest.api.Authentifier;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -33,25 +34,38 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
     protected User establisherUser ;
 
     protected String contractId ;
+    protected ArrayList<EthereumKey> othersParties = new ArrayList<>() ;
 
     protected EthereumContract ethContract ;
     protected SyncBlockChain sync ;
+    protected Class conf ;
+
+    //TODO : Check if uris is usefull..
 
     public BlockChainEstablisher(User user, HashMap<EthereumKey, String> uri) {
         // Matching the uris
         uris = uri;
         //Set User who use Establisher instance
         establisherUser = user ;
+        sync = new SyncBlockChain(Config.class) ;
+    }
+
+    public BlockChainEstablisher(User user, Class config) {
+        //Set User who use Establisher instance
+        establisherUser = user ;
+        conf = config ;
     }
 
     @Override
     public void initialize(BlockChainContract bcContract) {
         super.contract = bcContract ;
+        setOthersParties(contract.getParties());
+        contractId = contract.getId() ;
         ethContract = new EthereumContract(establisherUser.getEthKeys()) ;
-        sync = new SyncBlockChain(Config.class) ;
         super.signer = new EthereumSigner(ethContract, sync) ;
         super.signer.setKey(establisherUser.getEthKeys()) ;
         bcContract.setSigner(super.signer);
+        sync = new SyncBlockChain(conf) ;
         sync.run();
     }
 
@@ -71,19 +85,35 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         }, establisherUser.getEthKeys().toString())  ;
 
         if(deploy && !ethContract.isDeployed()) {
-            if(sync.getEthereum() == null)
-                System.out.println("SyncNULL") ;
             new DeployContract(sync, ethContract, establisherUser.getEthKeys()).run();
         }
     }
 
     @Override
     public void start() {
-        final Peer peer=Application.getInstance().getPeer();
-        // Sending an advertisement (trick to get the other peer URI)
-        EstablisherAdvertisementInterface cadv = AdvertisementFactory.createEstablisherAdvertisement();
-        cadv.setTitle("Un Contrat");
-        cadv.publish(peer);
+        if(ethContract.isDeployed())
+            sendContractAddr();
+    }
+
+    public void sendContractAddr() {
+        if(!ethContract.isDeployed())
+            throw new NullPointerException("Couldn't send contract Address, no contracts were deployed") ;
+        for(EthereumKey key : othersParties)
+            establisherService.sendContract(
+                    contractId, key.toString(),
+                    establisherUser.toString(),
+                    ByteUtil.toHexString(ethContract.getContractAdr())
+            ) ;
+    }
+
+    public void sendSolidityHash() {
+
+    }
+
+    public void setOthersParties(ArrayList<EthereumKey> parts) {
+        for (EthereumKey key : parts)
+            if(!key.equals(establisherUser.getEthKeys()))
+                othersParties.add(key) ;
     }
 
     public void stopSync() {

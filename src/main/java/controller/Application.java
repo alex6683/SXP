@@ -64,26 +64,7 @@ public class Application {
 		/*new Application();
 		Application.getInstance().runForTests(8081);*/
 
-		SyncBlockChain sync = new SyncBlockChain(Config.class) ;
-
-		sync.run();
-
-		EthereumContract contract = new EthereumContract() ;
-
-		new DeployContract(sync, contract).run();
-
-		new CallConstructor(sync, contract,
-				ByteUtil.hexStringToBytes("0x0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f"),
-				ByteUtil.hexStringToBytes("0x49a337147d9249ffe437a780fd6ba1ffd3e2bdad"),
-				"velo",
-				"carotte",
-				"IZI",
-				"OKLM"
-				).run() ;
-
-
-		Thread.currentThread().sleep(5000);
-		sync.closeSync();
+		new SyncBlockChain(Config.class).run();
 	}
 	
 	public void stop(){
