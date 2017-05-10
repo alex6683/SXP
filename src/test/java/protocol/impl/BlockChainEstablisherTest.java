@@ -11,14 +11,12 @@ import model.syncManager.UserSyncManagerImpl;
 import org.ethereum.util.ByteUtil;
 import org.junit.Test;
 import org.spongycastle.util.encoders.Hex;
-import protocol.impl.blockChain.BlockChainContract;
-import protocol.impl.blockChain.Config;
-import protocol.impl.blockChain.ConfigTestA;
-import protocol.impl.blockChain.ConfigTestB;
+import protocol.impl.blockChain.*;
 import util.TestInputGenerator;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by alex on 06/05/17.
@@ -107,28 +105,43 @@ public class BlockChainEstablisherTest {
         partis.add(users[0].getEthKeys());
         partis.add(users[1].getEthKeys());
 
-        BlockChainContract[] c = new BlockChainContract[N];
+
+        // Map of URIS
+        HashMap<EthereumKey, String> uris = new HashMap<>() ;
+        String uri = Application.getInstance().getPeer().getUri();
+        for (int k=0; k<N; k++){
+            EthereumKey key = new EthereumKey() ;
+            key.setPublicKey(users[k].getEthKeys().getPublicKey()) ;
+            uris.put(key, uri);
+        }
 
         bcContractA = new BlockChainContract(contractEntity[0], partis);
         bcContractB = new BlockChainContract(contractEntity[1], partis);
 
 
-        BlockChainEstablisher bcEstablisherA = new BlockChainEstablisher(users[0], ConfigTestA.class);
-        BlockChainEstablisher bcEstablisherB = new BlockChainEstablisher(users[1], ConfigTestB.class);
+        BlockChainEstablisher bcEstablisherA = new BlockChainEstablisher(users[0], ConfigTestA.class, uris);
+        BlockChainEstablisher bcEstablisherB = new BlockChainEstablisher(users[1], ConfigTestB.class, uris);
 
         bcEstablisherA.initialize(bcContractA, true);
 
-        System.out.println("\n\nDeployed : " + bcEstablisherA.ethContract.isDeployed()) ;
+        System.out.println("\n\nDeployed : " + ByteUtil.toHexString(bcEstablisherA.ethContract.getContractAdr())) ;
 
         bcEstablisherA.stopSync();
 
-        System.out.println(bcEst) ;
-
-        bcEstablisherB.initialize(bcContractB, true);
+        bcEstablisherB.initialize(bcContractB, false);
 
         bcEstablisherB.stopSync();
 
         bcEstablisherA.start() ;
+
+        //Time to sendContractAddr and set it
+        try{
+            Thread.sleep(1000);
+        }catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 }

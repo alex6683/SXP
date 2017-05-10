@@ -1,6 +1,7 @@
 package protocol.impl;
 
 import controller.Application;
+import controller.Users;
 import crypt.impl.signatures.EthereumSignature;
 import crypt.impl.signatures.EthereumSigner;
 import model.api.UserSyncManager;
@@ -50,7 +51,9 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         sync = new SyncBlockChain(Config.class) ;
     }
 
-    public BlockChainEstablisher(User user, Class config) {
+    public BlockChainEstablisher(User user, Class config, HashMap<EthereumKey, String> uri) {
+        // Mathcing the uris
+        uris = uri;
         //Set User who use Establisher instance
         establisherUser = user ;
         conf = config ;
@@ -72,11 +75,13 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
     public void initialize(BlockChainContract bcContract, boolean deploy) {
         this.initialize(bcContract);
 
+
+        //TODO : Check if good part with contract.getParti() and good contractID.
+
         establisherService.addListener(new ServiceListener() {
             @Override
             public void notify(Messages messages) {
                 BigInteger otherPart = ByteUtil.bytesToBigInteger(Hex.decode(messages.getMessage("sourceId"))) ;
-                //TODO : Check if good part with contract.getParti().
                 String addrContract = messages.getMessage("contract") ;
                 if(!ethContract.isDeployed()) {
                     ethContract.setContractAdr(Hex.decode(addrContract)) ;
@@ -98,16 +103,24 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
     public void sendContractAddr() {
         if(!ethContract.isDeployed())
             throw new NullPointerException("Couldn't send contract Address, no contracts were deployed") ;
-        for(EthereumKey key : othersParties)
+
+        for(EthereumKey key : othersParties) {
             establisherService.sendContract(
-                    contractId, key.toString(),
-                    establisherUser.toString(),
+                    contractId,
+                    key.toString(),
+                    establisherUser.getEthKeys().toString(),
                     ByteUtil.toHexString(ethContract.getContractAdr())
-            ) ;
+            );
+        }
     }
 
     public void sendSolidityHash() {
 
+    }
+
+    public void sign() {
+        sync.run();
+        contract.sign(super.signer, establisherUser.getEthKeys()) ;
     }
 
     public void setOthersParties(ArrayList<EthereumKey> parts) {
