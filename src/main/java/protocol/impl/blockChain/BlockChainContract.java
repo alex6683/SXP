@@ -33,7 +33,7 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
     private ArrayList<String> clauses = new ArrayList<>();
     private HashMap<EthereumKey, String> partiesName = new HashMap<>();
     private HashMap<EthereumKey, EthereumSignature> signatures = new HashMap<>();
-    private EthereumSigner signer;
+    private EthereumSigner signer ;
 
     public BlockChainContract(ContractEntity contract) {
         super() ;
@@ -45,7 +45,7 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         contract.setTitle(id);
         ethContract = new EthereumContract() ;
         sync = new SyncBlockChain(Config.class) ;
-        signer = new EthereumSigner(ethContract, sync) ;
+        //signer = new EthereumSigner(ethContract, sync) ;
     }
 
     @Deprecated
@@ -64,14 +64,14 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         contract.setTitle(id);
         ethContract = new EthereumContract() ;
         sync = new SyncBlockChain(Config.class) ;
-        signer = new EthereumSigner(ethContract, sync) ;
+       // signer = new EthereumSigner(ethContract, sync) ;
     }
 
+    // TODO : JsonTools probleme à réglé.
     public void setParties(ArrayList<String> partiesEntity){
         for (String part : partiesEntity){
             JsonTools<User> json = new JsonTools<>(new TypeReference<User>(){});
             User user = json.toEntity(part) ;
-            System.out.println("USER ? : " + user) ;
             //Users users = new Users();
             //System.out.println("USERS ? " + user.getId()) ;
             //User user = json.toEntity(users.get(part));

@@ -2,6 +2,7 @@ package model.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import crypt.api.key.AsymKey;
 import org.bouncycastle.pqc.math.linearalgebra.BigIntUtils;
@@ -23,16 +24,18 @@ import java.math.BigInteger;
 
 public class EthereumKey extends ECKey implements AsymKey<BigInteger>, Serializable {
 
-	@XmlElement(name="privateKey")
     //@NotNull
+	@XmlElement(name="privateKey")
     @JsonSerialize(using=controller.tools.BigIntegerSerializer.class)
+    @JsonDeserialize(using=controller.tools.BigIntegerDeserializer.class)
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     @JsonIgnore
     private BigInteger privateKey;
 
-    @XmlElement(name="publicKey")
     //@NotNull
+    @XmlElement(name="publicKey")
     @JsonSerialize(using=controller.tools.BigIntegerSerializer.class)
+    @JsonDeserialize(using=controller.tools.BigIntegerDeserializer.class)
     @JsonFormat(shape=JsonFormat.Shape.STRING)
     private BigInteger publicKey;
 
@@ -61,6 +64,12 @@ public class EthereumKey extends ECKey implements AsymKey<BigInteger>, Serializa
 
     public ECKey getPrivECKey() {
         return ECKey.fromPrivate(privateKey) ;
+    }
+
+    public boolean equals(EthereumKey key) {
+        return publicKey.equals(key.getPublicKey())
+                && privateKey.equals(key.getPrivateKey())
+                && getPrivECKey().equals(key.getPrivECKey()) ;
     }
 
     public String toString() {return Hex.toHexString(ByteUtil.bigIntegerToBytes(publicKey)) ; }
