@@ -122,6 +122,8 @@ public class BlockChainEstablisherTest {
 
         bcEstablisherA.stopSync();
 
+        System.out.println(bcEst) ;
+
         bcEstablisherB.initialize(bcContractB, true);
 
         bcEstablisherB.stopSync();
