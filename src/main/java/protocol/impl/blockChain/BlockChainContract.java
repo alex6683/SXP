@@ -3,6 +3,7 @@ package protocol.impl.blockChain;
 import com.fasterxml.jackson.core.type.TypeReference;
 import controller.Users;
 import controller.tools.JsonTools;
+import crypt.api.signatures.Signer;
 import crypt.impl.hashs.SHA256Hasher;
 import crypt.impl.signatures.EthereumSignature;
 import crypt.impl.signatures.EthereumSigner;
@@ -24,16 +25,14 @@ import java.util.HashMap;
  */
 public class BlockChainContract extends EstablisherContract<BigInteger, EthereumKey, EthereumSignature, EthereumSigner>{
 
-    private EthereumContract ethContract ;
-    private SyncBlockChain sync ;
-
     private String id ;
     private Date date ;
     private ArrayList<EthereumKey> parties = new ArrayList<>();
     private ArrayList<String> clauses = new ArrayList<>();
     private HashMap<EthereumKey, String> partiesName = new HashMap<>();
     private HashMap<EthereumKey, EthereumSignature> signatures = new HashMap<>();
-    private EthereumSigner signer;
+
+    private EthereumSigner signer ;
 
     public BlockChainContract(ContractEntity contract) {
         super() ;
@@ -43,9 +42,6 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         setClauses(contract.getClauses()) ;
         id = getHashableData().toString() ;
         contract.setTitle(id);
-        ethContract = new EthereumContract() ;
-        sync = new SyncBlockChain(Config.class) ;
-        signer = new EthereumSigner(ethContract, sync) ;
     }
 
     @Deprecated
@@ -62,16 +58,13 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         setClauses(contract.getClauses()) ;
         id = getHashableData().toString() ;
         contract.setTitle(id);
-        ethContract = new EthereumContract() ;
-        sync = new SyncBlockChain(Config.class) ;
-        signer = new EthereumSigner(ethContract, sync) ;
     }
 
+    // TODO : JsonTools probleme à réglé.
     public void setParties(ArrayList<String> partiesEntity){
         for (String part : partiesEntity){
             JsonTools<User> json = new JsonTools<>(new TypeReference<User>(){});
             User user = json.toEntity(part) ;
-            System.out.println("USER ? : " + user) ;
             //Users users = new Users();
             //System.out.println("USERS ? " + user.getId()) ;
             //User user = json.toEntity(users.get(part));
@@ -85,14 +78,11 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         clauses.addAll(clausesEntity) ;
     }
 
-    //GETTERS////
+    public void setSigner(EthereumSigner establisherSigner) {
+        signer = establisherSigner ;
+    }
 
-    public SyncBlockChain getSync() {
-        return sync;
-    }
-    public EthereumContract getEthContract() {
-        return ethContract;
-    }
+    //GETTERS////
     public String getId() { return id; }
     public ArrayList<EthereumKey> getParties() {
         return parties;
@@ -123,6 +113,9 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
 
     @Override
     public boolean isFinalized() {
+        if(signer == null) {
+            throw new NullPointerException("Signer not initialized yet") ;
+        }
         for(EthereumSignature partSign : signatures.values()) {
             if(!signer.verify(new byte[0], partSign)) {
                 return false ;
