@@ -82,8 +82,8 @@ public class Application {
 				).run() ;
 
 
-		Thread.currentThread().sleep(5000);
-		sync.closeSync();
+		//Thread.currentThread().sleep(5000);
+		//sync.closeSync();
 	}
 	
 	public void stop(){
