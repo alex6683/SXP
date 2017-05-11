@@ -96,10 +96,8 @@ public class SolidityContract {
                "        }\n" +
                "        \n" +
                "        function getSignature() constant returns(bool signed) {\n" +
-               "              if(sender == member1.add)\n" +
-               "                return member1.signed;\n" +
-               "            else if(sender == member2.add)\n" +
-               "                return member2.signed;\n" +
+               "              if(sender == member1.add || sender == member2.add)\n" +
+               "                return (member1.signed && member2.signed);\n" +
                "            else throw;\n" +
                "        }\n" +
                "        \n" +
