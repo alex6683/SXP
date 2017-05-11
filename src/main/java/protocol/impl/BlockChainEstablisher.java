@@ -71,7 +71,14 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
             e.printStackTrace();
         }
         super.signer = new EthereumSigner(ethContract, sync) ;
+
         super.signer.setBcContract(contract);
+
+
+        for(EthereumKey key : super.signer.getBcContract().getParties())
+            System.out.println("TEST INIT : " + key.toString());
+
+
         super.signer.setKey(establisherUser.getEthKeys()) ;
         bcContract.setSigner(super.signer);
         sync = new SyncBlockChain(conf) ;

@@ -147,10 +147,20 @@ public class BlockChainEstablisherTest {
         for(EthereumSignature sign : bcEstablisherA.getContract().getSignatures().values())
             System.out.println("TxFinal : " + sign.toString()) ;
 
+
         bcEstablisherB.sign(bcContractA) ;
 
         for(EthereumSignature sign : bcEstablisherA.getContract().getSignatures().values())
-            System.out.println("TxFinal : " + sign.toString()) ;
+            System.out.println("EstaATxFinal : " + sign.toString()) ;
+
+        for(EthereumSignature sign : bcEstablisherA.getContract().getSignatures().values())
+            System.out.println("EstaBTxFinal : " + sign.toString()) ;
+
+        for(String sign : contractEntity[0].getSignatures().keySet())
+            System.out.println("EntityATxFinal : " + sign) ;
+
+        for(String sign : contractEntity[0].getSignatures().keySet())
+            System.out.println("EntityBTxFinal : " + sign) ;
 
         bcEstablisherB.stopSync();
 

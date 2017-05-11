@@ -28,6 +28,10 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
         this.sync = sync;
     }
 
+    public BlockChainContract getBcContract() {
+        return bcContract;
+    }
+
     //TODO : Utiliser getKey() pour signer la Tx ethereum
 
     @Override
@@ -73,6 +77,12 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
 
         SolidityGetter getter = new SolidityGetter(sync, contract) ;
         getter.run();
+
+
+        for(EthereumKey key : bcContract.getParties())
+            System.out.println("Parties : " + key.toString());
+
+
         if(!getter.equals(bcContract)) {
             System.out.println("\n\nCONTRAT NON EQUIVALENT\n");
             return false;

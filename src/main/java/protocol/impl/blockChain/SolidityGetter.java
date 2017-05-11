@@ -111,20 +111,36 @@ public class SolidityGetter extends ContractCallImpl implements Runnable {
     }
 
     public boolean equals(BlockChainContract bc) {
-        for(EthereumKey key : bc.getParties()) {
+        boolean difference = true ;
+        int i = 0 ;
+        while(difference && i<bc.getParties().size()) {
+            EthereumKey key = bc.getParties().get(i) ;
             System.out.println("\nCurrentKey1 : " + key.toString());
-            if(ByteUtil.bigIntegerToBytes(key.getPublicKey()).equals(getAdd1()))
-                break ;
-            System.out.println("Add1 : " + ByteUtil.toHexString(getAdd1())) ;
-            return false;
+            if (ByteUtil.toHexString(ByteUtil.bigIntegerToBytes(key.getPublicKey())).equals(ByteUtil.toHexString(getAdd1()))) {
+                difference = false ;
+            }
+            else
+                System.out.println("Add1 : " + ByteUtil.toHexString(getAdd1()));
+            i++ ;
         }
-        for(EthereumKey key : bc.getParties()) {
+        if(difference)
+            return false ;
+        else
+            difference = true ;
+
+        while(difference && i<bc.getParties().size()) {
+            EthereumKey key = bc.getParties().get(i) ;
             System.out.println("\nCurrentKey2 : " + key.toString());
-            if(ByteUtil.bigIntegerToBytes(key.getPublicKey()).equals(getAdd2()))
-                break ;
-            System.out.println("Add2 : " + ByteUtil.toHexString(getAdd2())) ;
-            return false;
+            if (ByteUtil.toHexString(ByteUtil.bigIntegerToBytes(key.getPublicKey())).equals(ByteUtil.toHexString(getAdd2()))) {
+                difference = false ;
+            }
+            else
+                System.out.println("Add2 : " + ByteUtil.toHexString(getAdd2()));
+            i++ ;
         }
+        if(difference)
+            return false ;
+
         if(!bc.getClauses().contains(getClauseA())) {
             System.out.println("ClauseA : " + getClauseA()) ;
             return false;
