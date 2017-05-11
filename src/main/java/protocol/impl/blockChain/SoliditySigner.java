@@ -1,5 +1,6 @@
 package protocol.impl.blockChain;
 
+import model.entity.EthereumKey;
 import org.ethereum.core.Block;
 import org.ethereum.core.TransactionReceipt;
 import org.ethereum.db.ByteArrayWrapper;
@@ -14,12 +15,25 @@ import static java.lang.Thread.sleep;
  */
 public class SoliditySigner extends ContractCallImpl implements Runnable {
 
+    private TransactionReceipt tx ;
+
+    @Deprecated
     public SoliditySigner(SyncBlockChain ethereum, EthereumContract contract) {
         super(ethereum, contract);
     }
 
+    public SoliditySigner(SyncBlockChain ethereum, EthereumContract contract, EthereumKey key) {
+        super(ethereum, contract, key);
+    }
+
+    public TransactionReceipt getTx() {
+        return tx;
+    }
+
     @Override
     public void run() {
+        if(sync.getEthereum() == null)
+            throw new NullPointerException("Ethereum not Syncing") ;
         sync.getEthereum().addListener(new EthereumListenerAdapter() {
             //Check for each new Block if current Transaction is included in it
             @Override
@@ -45,7 +59,7 @@ public class SoliditySigner extends ContractCallImpl implements Runnable {
             }
             else {
                 try {
-                    super.callFunc("signature");
+                    tx = super.callFunc("signature");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

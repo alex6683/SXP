@@ -64,7 +64,6 @@ public class DeployContract extends SendTransaction implements Runnable {
             }
             else {
                 try {
-                    contract.compileData(contract.compileResult()) ;
                     TransactionReceipt receipt = sendTxAndWait(
                             contract.getSender(),
                             null,

@@ -108,6 +108,7 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
             throw new RuntimeException("invalid key");
         }
         signatures.put(k, s);
+
         contract.getSignatures().put(this.partiesName.get(k), s.toString());
     }
 
@@ -124,12 +125,13 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         return true ;
     }
 
+    //TODO : vérifié que les contrats soient similaires
     @Override
     public boolean checkContrat(EstablisherContract<BigInteger, EthereumKey, EthereumSignature, EthereumSigner> contrat) {
-        if(!this.equals(contrat) && this.isFinalized())
-            return false;
+        if(/*this.equals(contrat) && */this.isFinalized())
+            return true;
         setStatus(Status.FINALIZED);
-        return true ;
+        return false ;
     }
 
     @Override

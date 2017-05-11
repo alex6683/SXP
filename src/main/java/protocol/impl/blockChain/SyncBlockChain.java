@@ -28,6 +28,7 @@ public class SyncBlockChain implements Runnable {
     }
 
     public void closeSync() {
+        isSyncDone.set(false);
         ethereum.close();
         return ;
     }

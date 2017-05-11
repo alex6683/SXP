@@ -62,7 +62,7 @@ public class CallSetSign extends ContractCallImpl implements Runnable {
             else {
 
                 try {
-                    super.callFunc(function);
+                    tx = super.callFunc(function);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
