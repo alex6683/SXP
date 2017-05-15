@@ -2,6 +2,7 @@ package crypt.impl.signatures;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.ethereum.core.Transaction;
+import org.ethereum.util.ByteUtil;
 
 import javax.xml.bind.annotation.XmlElement;
 
@@ -31,5 +32,9 @@ public class EthereumSignature {
 
     public byte[] getContractAdr() {
         return contractAdr ;
+    }
+
+    public String toString() {
+        return ByteUtil.toHexString(tx.getHash()) ;
     }
 }

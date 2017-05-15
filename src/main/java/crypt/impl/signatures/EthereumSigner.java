@@ -2,6 +2,7 @@ package crypt.impl.signatures;
 
 import crypt.base.AbstractSigner;
 import model.entity.EthereumKey;
+import org.ethereum.util.ByteUtil;
 import protocol.impl.blockChain.*;
 
 /**
@@ -12,9 +13,23 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
     private EthereumContract contract ;
     private SyncBlockChain sync ;
 
+    private BlockChainContract bcContract ;
+
     public EthereumSigner(EthereumContract contract, SyncBlockChain sync) {
         this.contract = contract ;
         this.sync = sync ;
+    }
+
+    public void setBcContract(BlockChainContract bcContract) {
+        this.bcContract = bcContract;
+    }
+
+    public void setSync(SyncBlockChain sync) {
+        this.sync = sync;
+    }
+
+    public BlockChainContract getBcContract() {
+        return bcContract;
     }
 
     //TODO : Utiliser getKey() pour signer la Tx ethereum
@@ -26,8 +41,9 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
 
     @Override
     public EthereumSignature sign(byte[] message) {
+        System.out.println("\n\nSYNCING\n\n") ;
 
-        CallSetSign signer = new CallSetSign(sync, contract, getKey(), "signatureUser1") ;
+        SoliditySigner signer = new SoliditySigner(sync, contract) ;
         signer.run() ;
 
         if(signer.getTx() == null) {
@@ -39,22 +55,40 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
 
     @Override
     public boolean verify(byte[] message, EthereumSignature ethereumSignature) {
-        SyncBlockChain sync = new SyncBlockChain(Config.class) ;
-        sync.run() ;
+        if(bcContract == null) {
+            throw new NullPointerException("BlockChainContract not Set") ;
+        }
+
+        System.out.println(ByteUtil.toHexString(ByteUtil.bigIntegerToBytes(getKey().getPublicKey())) +
+                " vérifie la Tx +\n"  + ethereumSignature.toString()) ;
+
         ethereumSignature.getTx().verify();
 
-        CallGetSign call = new CallGetSign(sync, contract, "getU1") ;
+        System.out.println("\n\nvérifie Signature !");
+
+        SolidityGetterSignature call = new SolidityGetterSignature(sync, contract) ;
         call.run();
-        if(!call.getSign()) {
-            sync.closeSync();
-            return false ;
+        if(!call.getIsSigned()) {
+            System.out.println("\n\nNON SIGNER PAR LES DEUX PARTIES\n");
+            return false;
         }
-        //VERIFIE TOUT LES GETTERS
-        /*if(!call.getTODO) {
-            sync.closeSync();
-            return false ;
-        }*/
+
+        System.out.println("\n\nvérifie Getters !");
+
+        SolidityGetter getter = new SolidityGetter(sync, contract) ;
+        getter.run();
+
+
+        for(EthereumKey key : bcContract.getParties())
+            System.out.println("Parties : " + key.toString());
+
+
+        if(!getter.equals(bcContract)) {
+            System.out.println("\n\nCONTRAT NON EQUIVALENT\n");
+            return false;
+        }
 
         return true;
     }
+
 }

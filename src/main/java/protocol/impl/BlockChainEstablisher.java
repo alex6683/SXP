@@ -20,6 +20,7 @@ import protocol.api.Establisher;
 import protocol.impl.blockChain.*;
 import rest.api.Authentifier;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,8 +65,20 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         super.contract = bcContract ;
         setOthersParties(contract.getParties());
         contractId = contract.getId() ;
-        ethContract = new EthereumContract(establisherUser.getEthKeys()) ;
+        try {
+            ethContract = new EthereumContract(establisherUser.getEthKeys()) ;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         super.signer = new EthereumSigner(ethContract, sync) ;
+
+        super.signer.setBcContract(contract);
+
+
+        for(EthereumKey key : super.signer.getBcContract().getParties())
+            System.out.println("TEST INIT : " + key.toString());
+
+
         super.signer.setKey(establisherUser.getEthKeys()) ;
         bcContract.setSigner(super.signer);
         sync = new SyncBlockChain(conf) ;
@@ -91,6 +104,16 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
 
         if(deploy && !ethContract.isDeployed()) {
             new DeployContract(sync, ethContract, establisherUser.getEthKeys()).run();
+            new SolidityConstructor(
+                    sync,
+                    ethContract,
+                    ByteUtil.bigIntegerToBytes(establisherUser.getEthKeys().getPublicKey()),
+                    ByteUtil.bigIntegerToBytes(othersParties.get(0).getPublicKey()),
+                    "",
+                    "",
+                    contract.getClauses().get(0),
+                    contract.getClauses().get(1)
+            ).run() ;
         }
     }
 
@@ -118,9 +141,12 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
 
     }
 
-    public void sign() {
+    public void sign(BlockChainContract c) {
         sync.run();
+        contract.getSigner().setSync(sync);
         contract.sign(super.signer, establisherUser.getEthKeys()) ;
+        if(contract.checkContrat(c))
+            System.out.println("\n--CONTRACT FINALIZED--\n");
     }
 
     public void setOthersParties(ArrayList<EthereumKey> parts) {

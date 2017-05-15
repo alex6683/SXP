@@ -27,7 +27,7 @@ public class ContractCallImpl extends SendTransaction {
         contractCall = new CallTransaction.Contract(contract.getContractMetadata().abi);
     }
 
-    public void contractBlockChainConstructor(Object ...args) throws Exception {
+    /*public void contractBlockChainConstructor(Object ...args) throws Exception {
         CallTransaction.Function function = contractCall.getConstructor();
         if (function.type == CallTransaction.FunctionType.constructor)
             System.out.println("///////////// Constructeur trouvé /////////////////////////////////" + function.type.toString() + function.type.name());
@@ -37,17 +37,18 @@ public class ContractCallImpl extends SendTransaction {
             System.err.println("Some troubles launching constructor: " + receipt1.getError() + contractCall.getConstructor().name + " Function : " + function.type.name());
             return;
         }
-    }
+    }*/
 
     //Call function of our contract
-    public void callFunc(String func, Object ...args) throws Exception {
+    public TransactionReceipt callFunc(String func, Object ...args) throws Exception {
         CallTransaction.Function fct = contractCall.getByName(func);
         byte[] functionCallBytes = fct.encode(args);
         TransactionReceipt receipt2 = sendTxAndWait(contract.getSender(), contract.getContractAdr(), functionCallBytes);
         if (!receipt2.isSuccessful()) {
             System.err.println("Some troubles calling a contract function : " + receipt2.getError() + " Function : " + func);
-            return;
+            return null;
         }
+        return receipt2 ;
     }
 
     //Return value of get function of our contract

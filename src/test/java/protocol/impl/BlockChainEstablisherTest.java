@@ -3,6 +3,7 @@ package protocol.impl;
 import controller.Application;
 import crypt.api.hashs.Hasher;
 import crypt.factories.HasherFactory;
+import crypt.impl.signatures.EthereumSignature;
 import model.api.SyncManager;
 import model.entity.ContractEntity;
 import model.entity.EthereumKey;
@@ -124,8 +125,6 @@ public class BlockChainEstablisherTest {
 
         bcEstablisherA.initialize(bcContractA, true);
 
-        System.out.println("\n\nDeployed : " + ByteUtil.toHexString(bcEstablisherA.ethContract.getContractAdr())) ;
-
         bcEstablisherA.stopSync();
 
         bcEstablisherB.initialize(bcContractB, false);
@@ -141,6 +140,29 @@ public class BlockChainEstablisherTest {
             e.printStackTrace();
         }
 
+        bcEstablisherA.sign(bcContractB) ;
+
+        bcEstablisherA.stopSync() ;
+
+        for(EthereumSignature sign : bcEstablisherA.getContract().getSignatures().values())
+            System.out.println("TxFinal : " + sign.toString()) ;
+
+
+        bcEstablisherB.sign(bcContractA) ;
+
+        for(EthereumSignature sign : bcEstablisherA.getContract().getSignatures().values())
+            System.out.println("EstaATxFinal : " + sign.toString()) ;
+
+        for(EthereumSignature sign : bcEstablisherA.getContract().getSignatures().values())
+            System.out.println("EstaBTxFinal : " + sign.toString()) ;
+
+        for(String sign : contractEntity[0].getSignatures().keySet())
+            System.out.println("EntityATxFinal : " + sign) ;
+
+        for(String sign : contractEntity[0].getSignatures().keySet())
+            System.out.println("EntityBTxFinal : " + sign) ;
+
+        bcEstablisherB.stopSync();
 
     }
 

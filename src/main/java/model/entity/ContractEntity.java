@@ -79,7 +79,7 @@ public class ContractEntity {
 	@JsonSerialize(using=controller.tools.MapStringSerializer.class)
 	@JsonDeserialize(using=controller.tools.MapStringDeserializer.class)
 	@JsonFormat(shape=JsonFormat.Shape.STRING)
-	private HashMap<String, String> signatures;
+	private HashMap<String, String> signatures = new HashMap<>();
 
 
 	@XmlElement(name="establishementData")

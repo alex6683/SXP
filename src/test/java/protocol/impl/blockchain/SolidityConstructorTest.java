@@ -4,6 +4,8 @@ import org.ethereum.util.ByteUtil;
 import org.junit.Test;
 import protocol.impl.blockChain.*;
 
+import java.io.IOException;
+
 /**
  * Created by methylhaine on 10/05/17.
  */
@@ -16,7 +18,12 @@ public class SolidityConstructorTest {
 
         sync.run();
 
-        EthereumContract contract = new EthereumContract();
+        EthereumContract contract = null;
+        try {
+            contract = new EthereumContract();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         new DeployContract(sync, contract).run();
 

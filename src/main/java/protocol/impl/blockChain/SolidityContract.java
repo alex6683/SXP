@@ -40,7 +40,7 @@ public class SolidityContract {
                "    }\n" +
                "}";*/
 
-       "pragma solidity ^0.4.8;\n" +
+       "pragma solidity ^0.4.10;\n" +
                "contract Trade {\n" +
                "    struct Member {\n" +
                "        address add;\n" +
@@ -110,7 +110,7 @@ public class SolidityContract {
                "        }\n" +
                "}";
 
-       // WORKING CONTRACT
+       
       /* "pragma solidity ^0.4.8;\n" +
                "contract Trade {\n" +
                "    struct Member {\n" +
