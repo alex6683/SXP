@@ -30,6 +30,11 @@ public class SyncBlockChain implements Runnable {
     public void closeSync() {
         isSyncDone.set(false);
         ethereum.close();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return ;
     }
 

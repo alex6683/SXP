@@ -125,56 +125,32 @@ public class BlockChainEstablisherTest {
 
         bcEstablisherA.initialize(bcContractA, true);
 
-        try{
-            Thread.sleep(2000);
-        }catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        sleep(2000);
 
         bcEstablisherA.stopSync();
 
         bcEstablisherB.initialize(bcContractB, false);
 
-        try{
-            Thread.sleep(2000);
-        }catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        sleep(2000);
 
         bcEstablisherB.stopSync();
 
         bcEstablisherA.start() ;
 
         //Time to sendContractAddr and set it
-        try{
-            Thread.sleep(2000);
-        }catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        sleep(2000);
 
         bcEstablisherA.sign(bcContractB) ;
 
-        try{
-            Thread.sleep(2000);
-        }catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         bcEstablisherA.stopSync() ;
 
-        System.out.println("TxFinalSize : " + bcEstablisherA.getContract().getSignatures().size()) ;
-        for(EthereumSignature sign : bcEstablisherA.getContract().getSignatures().values())
-            System.out.println("TxFinal : " + sign.toString()) ;
-
+        sleep(30000);
 
         bcEstablisherB.sign(bcContractA) ;
 
+        bcEstablisherB.stopSync();
 
-        try{
-            Thread.sleep(1000);
-            //Thread.currentThread().join();
-        }catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        sleep(420000);
 
 
         System.out.println("EstaATxFinalSize : " + bcEstablisherA.getContract().getSignatures().size()) ;
@@ -193,8 +169,14 @@ public class BlockChainEstablisherTest {
         for(String sign : contractEntity[1].getSignatures().keySet())
             System.out.println("EntityBTxFinal : " + sign) ;
 
-        bcEstablisherB.stopSync();
+    }
 
+    public void sleep(int i) {
+        try{
+            Thread.sleep(i);
+        }catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

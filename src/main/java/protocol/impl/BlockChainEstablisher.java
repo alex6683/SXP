@@ -108,10 +108,17 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
                         break ;
                     case '3' :
                         String fromWho = messages.getMessage("sourceId");
-                        upDateSignatures(contract, fromWho, content.substring(1));
-                        if(!shareTxSign) {
+                        System.out.println("sourceID : " + fromWho );
+                        upDateSignatures(fromWho, content.substring(1));
+                        if(!shareTxSign && contract.getSignatures().containsKey(establisherUser.getEthKeys())) {
                             shareSign();
                         }
+                        sync.run();
+                        contract.getSigner().setSync(sync);
+                        System.out.println("AVANT CHECKCONTRAT");
+                        contract.checkContrat(contract) ;
+                        System.out.println("APRES CHECKCONTRAT");
+                        sync.closeSync();
                         break ;
                     default: throw new IllegalArgumentException("Sent a bad content") ;
                 }
@@ -187,27 +194,23 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         shareTxSign = true ;
     }
 
-    public void upDateSignatures(BlockChainContract c, String who, String TxSign) {
-        contract.getSigner().setSync(sync);
-        //if(contract.checkContrat(c)) {
-            System.out.println("\n--CONTRACT FINALIZED VERIFIéé--\n");
-            for(EthereumKey key : contract.getParties()) {
-                if(contract.getPartieName().containsKey(key) && contract.getPartieName().get(key).equals(who))
-                    System.out.println("Ajout de la signature de " + key.toString()) ;
-                    contract.addSignature(key, new EthereumSignature(TxSign));
+    public void upDateSignatures(String who, String TxSign) {
+        for(EthereumKey key : contract.getParties()) {
+            if (key.toString().equals(who)) {
+                System.out.println("Ajout de la signature de " + key.toString() + " par " + establisherUser.getEthKeys().toString());
+                contract.addSignature(key, new EthereumSignature(TxSign));
             }
-       // }
+            else
+                System.out.println("N'ajoute pas " + key.toString());
+        }
     }
-    
+
     public void sign(BlockChainContract c) {
         sync.run();
         contract.getSigner().setSync(sync);
         contract.sign(super.signer, establisherUser.getEthKeys()) ;
-        //TODO : attention
-        if(contract.checkContrat(c)) {
-            System.out.println("\n--CONTRACT FINALIZED--\n");
-            shareSign();
-        }
+        contract.checkContrat(c) ;
+        shareSign();
     }
 
     public void setOthersParties(ArrayList<EthereumKey> parts) {

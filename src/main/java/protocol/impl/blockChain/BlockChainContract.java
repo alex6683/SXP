@@ -117,8 +117,13 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         if(signer == null) {
             throw new NullPointerException("Signer not initialized yet") ;
         }
+        for(EthereumKey key : parties) {
+            if(!signatures.containsKey(key)) {
+                System.out.println("\nPAS TOUT LE MONDE EST DANS SIGNATURES\n") ;
+                return false ;
+            }
+        }
         for(EthereumSignature partSign : signatures.values()) {
-            System.out.println("ISFINISH ?? Check " + partSign.toString());
             if(!signer.verify(new byte[0], partSign)) {
                 return false ;
             }
@@ -131,7 +136,8 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
     public boolean checkContrat(EstablisherContract<BigInteger, EthereumKey, EthereumSignature, EthereumSigner> contrat) {
         if(/*this.equals(contrat) && */!this.isFinalized())
             return false;
-        setStatus(Status.FINALIZED);
+        setStatus(Status.FINALIZED) ;
+        System.out.println("\n--CONTRACT FINALIZE--\n") ;
         return true ;
     }
 
