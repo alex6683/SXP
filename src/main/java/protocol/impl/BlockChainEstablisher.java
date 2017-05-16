@@ -4,6 +4,7 @@ import controller.Application;
 import controller.Users;
 import crypt.impl.signatures.EthereumSignature;
 import crypt.impl.signatures.EthereumSigner;
+import model.api.Status;
 import model.api.UserSyncManager;
 import model.entity.EthereumKey;
 import model.entity.User;
@@ -14,6 +15,7 @@ import network.api.Peer;
 import network.api.ServiceListener;
 import network.api.advertisement.EstablisherAdvertisementInterface;
 import network.factories.AdvertisementFactory;
+import org.ethereum.core.Transaction;
 import org.ethereum.util.ByteUtil;
 import org.spongycastle.util.encoders.Hex;
 import protocol.api.Establisher;
@@ -34,6 +36,7 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
             (EstablisherService) Application.getInstance().getPeer().getService(EstablisherService.NAME);
 
     protected User establisherUser ;
+    private boolean shareTxSign ;
 
     protected String contractId ;
     protected ArrayList<EthereumKey> othersParties = new ArrayList<>() ;
@@ -49,7 +52,7 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         uris = uri;
         //Set User who use Establisher instance
         establisherUser = user ;
-        sync = new SyncBlockChain(Config.class) ;
+        shareTxSign = false ;
     }
 
     public BlockChainEstablisher(User user, Class config, HashMap<EthereumKey, String> uri) {
@@ -57,6 +60,7 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         uris = uri;
         //Set User who use Establisher instance
         establisherUser = user ;
+        shareTxSign = false ;
         conf = config ;
     }
 
@@ -74,11 +78,6 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
 
         super.signer.setBcContract(contract);
 
-
-        for(EthereumKey key : super.signer.getBcContract().getParties())
-            System.out.println("TEST INIT : " + key.toString());
-
-
         super.signer.setKey(establisherUser.getEthKeys()) ;
         bcContract.setSigner(super.signer);
         sync = new SyncBlockChain(conf) ;
@@ -94,12 +93,35 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         establisherService.addListener(new ServiceListener() {
             @Override
             public void notify(Messages messages) {
-                BigInteger otherPart = ByteUtil.bytesToBigInteger(Hex.decode(messages.getMessage("sourceId"))) ;
+                String content = messages.getMessage("contract") ;
+                switch (content.charAt(0)) {
+                    case '1' :
+                        if(!ethContract.isDeployed()) {
+                            ethContract.setContractAdr(Hex.decode(content.substring(1))) ;
+                        }
+                        break ;
+                    case '2' :
+                        String solidityHash = ethContract.gethashSolidity();
+                        if(!solidityHash.equals(content.substring(1))) {
+                            throw new SecurityException("SoliditySrc aren't equals ") ;
+                        }
+                        break ;
+                    case '3' :
+                        String fromWho = messages.getMessage("sourceId");
+                        upDateSignatures(contract, fromWho, content.substring(1));
+                        if(!shareTxSign) {
+                            shareSign();
+                        }
+                        break ;
+                    default: throw new IllegalArgumentException("Sent a bad content") ;
+                }
+            }
+                /*BigInteger otherPart = ByteUtil.bytesToBigInteger(Hex.decode(messages.getMessage("sourceId"))) ;
                 String addrContract = messages.getMessage("contract") ;
                 if(!ethContract.isDeployed()) {
                     ethContract.setContractAdr(Hex.decode(addrContract)) ;
                 }
-            }
+            }*/
         }, establisherUser.getEthKeys().toString())  ;
 
         if(deploy && !ethContract.isDeployed()) {
@@ -119,8 +141,10 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
 
     @Override
     public void start() {
-        if(ethContract.isDeployed())
+        if(ethContract.isDeployed()) {
             sendContractAddr();
+            sendSolidityHash();
+        }
     }
 
     public void sendContractAddr() {
@@ -132,21 +156,58 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
                     contractId,
                     key.toString(),
                     establisherUser.getEthKeys().toString(),
-                    ByteUtil.toHexString(ethContract.getContractAdr())
+                    "1" + ByteUtil.toHexString(ethContract.getContractAdr())
             );
         }
     }
 
     public void sendSolidityHash() {
+        if(!ethContract.isDeployed())
+            throw new NullPointerException("Couldn't send contract Address, no contracts were deployed") ;
 
+        for(EthereumKey key : othersParties) {
+            establisherService.sendContract(
+                    contractId,
+                    key.toString(),
+                    establisherUser.getEthKeys().toString(),
+                    "2" + ethContract.gethashSolidity().toString()
+            );
+        }
     }
 
+    public void shareSign() {
+        for(EthereumKey key : othersParties) {
+            establisherService.sendContract(
+                    contractId,
+                    key.toString(),
+                    establisherUser.getEthKeys().toString(),
+                    "3" + contract.getSignatures().get(establisherUser.getEthKeys()).getStringEncoded()
+            );
+        }
+        shareTxSign = true ;
+    }
+
+    public void upDateSignatures(BlockChainContract c, String who, String TxSign) {
+        contract.getSigner().setSync(sync);
+        //if(contract.checkContrat(c)) {
+            System.out.println("\n--CONTRACT FINALIZED VERIFIéé--\n");
+            for(EthereumKey key : contract.getParties()) {
+                if(contract.getPartieName().containsKey(key) && contract.getPartieName().get(key).equals(who))
+                    System.out.println("Ajout de la signature de " + key.toString()) ;
+                    contract.addSignature(key, new EthereumSignature(TxSign));
+            }
+       // }
+    }
+    
     public void sign(BlockChainContract c) {
         sync.run();
         contract.getSigner().setSync(sync);
         contract.sign(super.signer, establisherUser.getEthKeys()) ;
-        if(contract.checkContrat(c))
+        //TODO : attention
+        if(contract.checkContrat(c)) {
             System.out.println("\n--CONTRACT FINALIZED--\n");
+            shareSign();
+        }
     }
 
     public void setOthersParties(ArrayList<EthereumKey> parts) {

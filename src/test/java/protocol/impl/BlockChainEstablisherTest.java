@@ -125,9 +125,21 @@ public class BlockChainEstablisherTest {
 
         bcEstablisherA.initialize(bcContractA, true);
 
+        try{
+            Thread.sleep(2000);
+        }catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         bcEstablisherA.stopSync();
 
         bcEstablisherB.initialize(bcContractB, false);
+
+        try{
+            Thread.sleep(2000);
+        }catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         bcEstablisherB.stopSync();
 
@@ -135,31 +147,50 @@ public class BlockChainEstablisherTest {
 
         //Time to sendContractAddr and set it
         try{
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         }catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         bcEstablisherA.sign(bcContractB) ;
 
+        try{
+            Thread.sleep(2000);
+        }catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         bcEstablisherA.stopSync() ;
 
+        System.out.println("TxFinalSize : " + bcEstablisherA.getContract().getSignatures().size()) ;
         for(EthereumSignature sign : bcEstablisherA.getContract().getSignatures().values())
             System.out.println("TxFinal : " + sign.toString()) ;
 
 
         bcEstablisherB.sign(bcContractA) ;
 
+
+        try{
+            Thread.sleep(1000);
+            //Thread.currentThread().join();
+        }catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println("EstaATxFinalSize : " + bcEstablisherA.getContract().getSignatures().size()) ;
         for(EthereumSignature sign : bcEstablisherA.getContract().getSignatures().values())
             System.out.println("EstaATxFinal : " + sign.toString()) ;
 
-        for(EthereumSignature sign : bcEstablisherA.getContract().getSignatures().values())
+        System.out.println("EstaBTxFinalSize : " + bcEstablisherB.getContract().getSignatures().size()) ;
+        for(EthereumSignature sign : bcEstablisherB.getContract().getSignatures().values())
             System.out.println("EstaBTxFinal : " + sign.toString()) ;
 
+        System.out.println("EntityATxFinalSize : " + contractEntity[0].getSignatures().size()) ;
         for(String sign : contractEntity[0].getSignatures().keySet())
             System.out.println("EntityATxFinal : " + sign) ;
 
-        for(String sign : contractEntity[0].getSignatures().keySet())
+        System.out.println("EntityBTxFinalSize : " + contractEntity[1].getSignatures().size()) ;
+        for(String sign : contractEntity[1].getSignatures().keySet())
             System.out.println("EntityBTxFinal : " + sign) ;
 
         bcEstablisherB.stopSync();

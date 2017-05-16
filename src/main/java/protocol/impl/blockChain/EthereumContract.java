@@ -3,10 +3,9 @@ package protocol.impl.blockChain;
 import crypt.impl.hashs.SHA256Hasher;
 import model.entity.EthereumKey;
 import org.ethereum.crypto.ECKey;
-import org.ethereum.facade.Ethereum ;
-import org.ethereum.core.CallTransaction;
 import org.ethereum.solidity.compiler.CompilationResult;
 import org.ethereum.solidity.compiler.SolidityCompiler;
+import org.ethereum.util.ByteUtil;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class EthereumContract {
     // TODO : Changer sender de class (SendTx ou Signer?)
 
     private String contractSrc ;
-    private byte[] hashSolidity ;
+    private String hashSolidity ;
     @Deprecated
     private ECKey sender ;
     private CompilationResult.ContractMetadata contractMetadata ;
@@ -31,7 +30,7 @@ public class EthereumContract {
         contractSrc = new SolidityContract().soliditySrc ;
         contractMetadata = null ;
         contractAdr = null ;
-        hashSolidity = new SHA256Hasher().getHash(contractSrc.getBytes()) ;
+        hashSolidity = ByteUtil.toHexString(new SHA256Hasher().getHash(contractSrc.getBytes())) ;
         sender = ECKey.fromPrivate(
                 Hex.decode("287fc6941394e06872850966e20fe190ad43b3d0a3caa82e42cd077a6aaeb8b5")
         );
@@ -43,7 +42,7 @@ public class EthereumContract {
         contractSrc = new SolidityContract().soliditySrc ;
         contractMetadata = null ;
         contractAdr = null ;
-        hashSolidity = new SHA256Hasher().getHash(contractSrc.getBytes()) ;
+        hashSolidity = ByteUtil.toHexString(new SHA256Hasher().getHash(contractSrc.getBytes())) ;
         sender = keys.getPrivECKey() ;
         this.compileData(this.compileResult()) ;
     }
@@ -53,7 +52,7 @@ public class EthereumContract {
         contractSrc = src ;
         contractMetadata = null ;
         contractAdr = null ;
-        hashSolidity = new SHA256Hasher().getHash(contractSrc.getBytes()) ;
+        hashSolidity = ByteUtil.toHexString(new SHA256Hasher().getHash(contractSrc.getBytes())) ;
         sender = ECKey.fromPrivate(keys.getPrivateKey()) ;
         this.compileData(this.compileResult()) ;
     }
@@ -71,7 +70,7 @@ public class EthereumContract {
     public ECKey getSender() {
         return sender ;
     }
-    public byte[] gethashSolidity() {
+    public String gethashSolidity() {
         return hashSolidity;
     }
     ///////////

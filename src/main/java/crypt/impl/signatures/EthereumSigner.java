@@ -41,7 +41,7 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
 
     @Override
     public EthereumSignature sign(byte[] message) {
-        System.out.println("\n\nSYNCING\n\n") ;
+        System.out.println("\n\nSINGNING of " + getKey().toString() +"\n\n") ;
 
         SoliditySigner signer = new SoliditySigner(sync, contract) ;
         signer.run() ;
@@ -59,7 +59,7 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
             throw new NullPointerException("BlockChainContract not Set") ;
         }
 
-        System.out.println(ByteUtil.toHexString(ByteUtil.bigIntegerToBytes(getKey().getPublicKey())) +
+        System.out.println(getKey().toString() +
                 " vérifie la Tx +\n"  + ethereumSignature.toString()) ;
 
         ethereumSignature.getTx().verify();
@@ -69,7 +69,7 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
         SolidityGetterSignature call = new SolidityGetterSignature(sync, contract) ;
         call.run();
         if(!call.getIsSigned()) {
-            System.out.println("\n\nNON SIGNER PAR LES DEUX PARTIES\n");
+            System.out.println("\n\nNON SIGNE PAR LES DEUX PARTIES\n");
             return false;
         }
 

@@ -102,13 +102,13 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
     ///////////
 
 
+    @SuppressWarnings("Since15")
     @Override
     public void addSignature(EthereumKey k, EthereumSignature s) {
         if(k == null || !this.parties.contains(k)) {
             throw new RuntimeException("invalid key");
         }
-        signatures.put(k, s);
-
+        signatures.putIfAbsent(k, s);
         contract.getSignatures().put(this.partiesName.get(k), s.toString());
     }
 
@@ -118,6 +118,7 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
             throw new NullPointerException("Signer not initialized yet") ;
         }
         for(EthereumSignature partSign : signatures.values()) {
+            System.out.println("ISFINISH ?? Check " + partSign.toString());
             if(!signer.verify(new byte[0], partSign)) {
                 return false ;
             }
@@ -128,10 +129,10 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
     //TODO : vérifié que les contrats soient similaires
     @Override
     public boolean checkContrat(EstablisherContract<BigInteger, EthereumKey, EthereumSignature, EthereumSigner> contrat) {
-        if(/*this.equals(contrat) && */this.isFinalized())
-            return true;
+        if(/*this.equals(contrat) && */!this.isFinalized())
+            return false;
         setStatus(Status.FINALIZED);
-        return false ;
+        return true ;
     }
 
     @Override
@@ -153,6 +154,9 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
     public EthereumSignature sign(EthereumSigner signer, EthereumKey k) {
         setStatus(Status.SIGNING);
         EthereumSignature signature = signer.sign(new byte[0]) ;
+
+        System.out.println("Signature de " + k.toString() + " Terminer \n");
+
         if(signature == null) {
             throw new NullPointerException("Signature de " + k.getPublicKey() + "impossible");
         }
