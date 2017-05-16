@@ -93,6 +93,14 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         establisherService.addListener(new ServiceListener() {
             @Override
             public void notify(Messages messages) {
+                String titleId = messages.getMessage("title") ;
+                if(titleId.equals(contractId)) {
+                    throw new SecurityException("ID doesn't match") ;
+                }
+                String source = messages.getMessage("sourceId") ;
+                if(!containsParti(source)) {
+                    throw new SecurityException("Sender isn't a parti of contract") ;
+                }
                 String content = messages.getMessage("contract") ;
                 switch (content.charAt(0)) {
                     case '1' :
@@ -103,7 +111,7 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
                     case '2' :
                         String solidityHash = ethContract.gethashSolidity();
                         if(!solidityHash.equals(content.substring(1))) {
-                            throw new SecurityException("SoliditySrc aren't equals ") ;
+                            throw new SecurityException("SoliditySrc doesn't match") ;
                         }
                         break ;
                     case '3' :
@@ -123,12 +131,6 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
                     default: throw new IllegalArgumentException("Sent a bad content") ;
                 }
             }
-                /*BigInteger otherPart = ByteUtil.bytesToBigInteger(Hex.decode(messages.getMessage("sourceId"))) ;
-                String addrContract = messages.getMessage("contract") ;
-                if(!ethContract.isDeployed()) {
-                    ethContract.setContractAdr(Hex.decode(addrContract)) ;
-                }
-            }*/
         }, establisherUser.getEthKeys().toString())  ;
 
         if(deploy && !ethContract.isDeployed()) {
@@ -217,6 +219,15 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         for (EthereumKey key : parts)
             if(!key.equals(establisherUser.getEthKeys()))
                 othersParties.add(key) ;
+    }
+
+    public boolean containsParti(String key) {
+        for(EthereumKey part : contract.getParties()) {
+            if(part.toString().equals(key)) {
+                return true ;
+            }
+        }
+        return false ;
     }
 
     public void stopSync() {

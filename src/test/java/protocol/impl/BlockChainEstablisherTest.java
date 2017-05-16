@@ -150,7 +150,8 @@ public class BlockChainEstablisherTest {
 
         bcEstablisherB.stopSync();
 
-        sleep(420000);
+        //time to EstablisherA check if finalized when EstablisherB share Tx Signature
+        sleep(300000);
 
 
         System.out.println("EstaATxFinalSize : " + bcEstablisherA.getContract().getSignatures().size()) ;

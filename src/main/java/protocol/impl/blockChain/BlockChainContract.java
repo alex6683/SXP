@@ -40,7 +40,7 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         date = contract.getCreatedAt() ;
         setParties(contract.getParties());
         setClauses(contract.getClauses()) ;
-        id = getHashableData().toString() ;
+        id = ByteUtil.toHexString(getHashableData()) ;
         contract.setTitle(id);
     }
 
@@ -131,10 +131,9 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         return true ;
     }
 
-    //TODO : vérifié que les contrats soient similaires
     @Override
     public boolean checkContrat(EstablisherContract<BigInteger, EthereumKey, EthereumSignature, EthereumSigner> contrat) {
-        if(/*this.equals(contrat) && */!this.isFinalized())
+        if(!this.equals(contrat) && !this.isFinalized())
             return false;
         setStatus(Status.FINALIZED) ;
         System.out.println("\n--CONTRACT FINALIZE--\n") ;
@@ -143,7 +142,8 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
 
     @Override
     public boolean equals(EstablisherContract<BigInteger, EthereumKey, EthereumSignature, EthereumSigner> c) {
-        if(!c.getHashableData().equals(this.getHashableData()))
+        System.out.println(ByteUtil.toHexString(c.getHashableData()) + " ?= " + ByteUtil.toHexString(getHashableData())) ;
+        if(!c.getHashableData().equals(getHashableData()))
             return false;
         return true ;
     }
