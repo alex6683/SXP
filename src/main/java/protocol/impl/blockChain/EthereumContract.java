@@ -31,9 +31,6 @@ public class EthereumContract {
         contractMetadata = null ;
         contractAdr = null ;
         hashSolidity = ByteUtil.toHexString(new SHA256Hasher().getHash(contractSrc.getBytes())) ;
-        /*sender = ECKey.fromPrivate(
-                Hex.decode("287fc6941394e06872850966e20fe190ad43b3d0a3caa82e42cd077a6aaeb8b5")
-        );*/
         this.compileData(this.compileResult()) ;
     }
 
