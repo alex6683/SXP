@@ -1,13 +1,12 @@
 package protocol.impl.blockchain;
 
-import controller.Application;
 import org.junit.Test;
-import protocol.impl.blockChain.Config;
+import protocol.impl.blockChain.RopstenConfig;
 
 /**
  * Created by methylhaine on 24/04/17.
  */
-public class BlockChainConfigTest {
+public class BlockChainRopstenConfigTest {
 
     @Test
     public void test() {
@@ -19,10 +18,10 @@ public class BlockChainConfigTest {
 
         System.out.println("Configuration actuelle de la BlockChain :");
 
-        Config configTest = new Config();
+        RopstenConfig ropstenConfigTest = new RopstenConfig();
 
         /*System.out.println();
-        System.out.print(configTest.getConfiguration());
+        System.out.print(ropstenConfigTest.getConfiguration());
         System.out.println();*/
     }
 }

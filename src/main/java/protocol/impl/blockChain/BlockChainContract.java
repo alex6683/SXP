@@ -60,7 +60,7 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         contract.setTitle(id);
     }
 
-    // TODO : JsonTools probleme à réglé.
+    // TODO : JsonTools probleme à régler.
     public void setParties(ArrayList<String> partiesEntity){
         for (String part : partiesEntity){
             JsonTools<User> json = new JsonTools<>(new TypeReference<User>(){});

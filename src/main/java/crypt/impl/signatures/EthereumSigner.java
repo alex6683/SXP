@@ -43,7 +43,7 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
     public EthereumSignature sign(byte[] message) {
         System.out.println("\n\nSINGNING of " + getKey().toString() +"\n\n") ;
 
-        SoliditySigner signer = new SoliditySigner(sync, contract) ;
+        SoliditySigner signer = new SoliditySigner(sync, contract, getKey()) ;
         signer.run() ;
 
         if(signer.getTx() == null) {

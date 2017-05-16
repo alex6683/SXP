@@ -52,8 +52,8 @@ public class ConfigTestB {
     //A voir
     private static class ConfigTest {
         @Bean
-        public Config basicSample() {
-            return new Config();
+        public RopstenConfig basicSample() {
+            return new RopstenConfig();
         }
     }
 

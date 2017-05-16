@@ -154,7 +154,7 @@ public class JettyRestServer implements RestServer{
 			sslContextFactory.setKeyStorePassword(this.cert_gen.getKsPassword());
 			sslContextFactory.setKeyManagerPassword(this.cert_gen.getKsPassword());
 
-			// HTTPS Config
+			// HTTPS RopstenConfig
 			HttpConfiguration https_config = new HttpConfiguration(http_config);
 			SecureRequestCustomizer src = new SecureRequestCustomizer();
 			src.setStsMaxAge(2000);
@@ -183,7 +183,7 @@ public class JettyRestServer implements RestServer{
 			sslContextFactoryb.setKeyStorePassword(this.cert_gen.getKsPassword());
 			sslContextFactoryb.setKeyManagerPassword(this.cert_gen.getKsPassword());
 
-			// HTTPS Config
+			// HTTPS RopstenConfig
 			HttpConfiguration https_configb = new HttpConfiguration(http_config);
 			SecureRequestCustomizer srcb = new SecureRequestCustomizer();
 			srcb.setStsMaxAge(2000);

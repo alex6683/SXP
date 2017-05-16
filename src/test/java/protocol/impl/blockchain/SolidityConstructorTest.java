@@ -14,7 +14,7 @@ public class SolidityConstructorTest {
 
     @Test
     public void test() {
-        SyncBlockChain sync = new SyncBlockChain(Config.class);
+        SyncBlockChain sync = new SyncBlockChain(RopstenConfig.class);
 
         sync.run();
 

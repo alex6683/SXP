@@ -45,8 +45,6 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
     protected SyncBlockChain sync ;
     protected Class conf ;
 
-    //TODO : Check if uris is usefull..
-
     public BlockChainEstablisher(User user, HashMap<EthereumKey, String> uri) {
         // Matching the uris
         uris = uri;
@@ -55,8 +53,9 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         shareTxSign = false ;
     }
 
+    //Contructor for Testing purposes
     public BlockChainEstablisher(User user, Class config, HashMap<EthereumKey, String> uri) {
-        // Mathcing the uris
+        // Matching the uris
         uris = uri;
         //Set User who use Establisher instance
         establisherUser = user ;
@@ -70,7 +69,7 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
         setOthersParties(contract.getParties());
         contractId = contract.getId() ;
         try {
-            ethContract = new EthereumContract(establisherUser.getEthKeys()) ;
+            ethContract = new EthereumContract() ;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -138,6 +137,7 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
             new SolidityConstructor(
                     sync,
                     ethContract,
+                    establisherUser.getEthKeys(),
                     ByteUtil.bigIntegerToBytes(establisherUser.getEthKeys().getPublicKey()),
                     ByteUtil.bigIntegerToBytes(othersParties.get(0).getPublicKey()),
                     "",

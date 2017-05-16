@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 /**
  * Created by methylhaine on 18/04/17.
  */
-public class Config {
+public class RopstenConfig {
 
     private final String configuration =
             "peer.discovery = {" +
@@ -53,8 +53,8 @@ public class Config {
     //A voir
     private static class ConfigTest {
         @Bean
-        public Config basicSample() {
-            return new Config();
+        public RopstenConfig basicSample() {
+            return new RopstenConfig();
         }
     }
 

@@ -25,19 +25,20 @@ public class EthereumContract {
     private byte[] contractAdr ;
 
     //Constructor with default Solidity Src
-    @Deprecated
+
     public EthereumContract() throws IOException {
         contractSrc = new SolidityContract().soliditySrc ;
         contractMetadata = null ;
         contractAdr = null ;
         hashSolidity = ByteUtil.toHexString(new SHA256Hasher().getHash(contractSrc.getBytes())) ;
-        sender = ECKey.fromPrivate(
+        /*sender = ECKey.fromPrivate(
                 Hex.decode("287fc6941394e06872850966e20fe190ad43b3d0a3caa82e42cd077a6aaeb8b5")
-        );
+        );*/
         this.compileData(this.compileResult()) ;
     }
 
     //Constructor with default Solidity Src and your sign keys
+    @Deprecated
     public EthereumContract(EthereumKey keys) throws IOException {
         contractSrc = new SolidityContract().soliditySrc ;
         contractMetadata = null ;
@@ -48,6 +49,7 @@ public class EthereumContract {
     }
 
     //Constructor with your own Solidity Src and your sign keys
+    @Deprecated
     public EthereumContract(String src, EthereumKey keys) throws IOException {
         contractSrc = src ;
         contractMetadata = null ;
