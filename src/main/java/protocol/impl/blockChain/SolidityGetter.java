@@ -16,8 +16,8 @@ import static java.lang.Thread.sleep;
  */
 public class SolidityGetter extends ContractCallImpl implements Runnable {
 
-    private byte[] Add1;
-    private byte[] Add2;
+    private byte[] add1;
+    private byte[] add2;
     private byte[] msgSender;
     private String item1;
     private String item2;
@@ -55,20 +55,17 @@ public class SolidityGetter extends ContractCallImpl implements Runnable {
             }
             else {
                 try {
-                    Add1 = (byte[])  super.getReturnContract("getAdd1");
-                    System.out.println("\nADD1") ;
-                    Add2 = (byte[]) super.getReturnContract("getAdd2");
-                    System.out.println("\nADD2") ;
-                    msgSender = (byte[]) super.getReturnContract("getSender");
-                    System.out.println("\n") ;
+                    System.out.println("\n\n[Getters Call] : ") ;
+                    add1 = (byte[])  super.getReturnContract("getAdd1");
+                    System.out.println("\t<Address A> " + ByteUtil.toHexString(add1)) ;
+                    add2 = (byte[]) super.getReturnContract("getAdd2");
+                    System.out.println("\t<Address B> " +ByteUtil.toHexString(add2)) ;
                     item1 =  (String) super.getReturnContract("getItem1");
-                    System.out.println("\nITEM1") ;
                     item2 =  (String) super.getReturnContract("getItem2");
-                    System.out.println("\nITEM2") ;
                     clauseA =  (String) super.getReturnContract("getClauseA");
-                    System.out.println("\nCLAUSE1") ;
+                    System.out.println("\t<Clause A> " + clauseA) ;
                     clauseB =  (String) super.getReturnContract("getClauseB");
-                    System.out.println("\nCLAUSE2") ;
+                    System.out.println("\t<Clause B> " + clauseB + "\n\n") ;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -83,11 +80,11 @@ public class SolidityGetter extends ContractCallImpl implements Runnable {
     }
 
     public byte[] getAdd1() {
-        return Add1;
+        return add1;
     }
 
     public byte[] getAdd2() {
-        return Add2;
+        return add2;
     }
 
     public byte[] getMsgSender() {
@@ -115,12 +112,9 @@ public class SolidityGetter extends ContractCallImpl implements Runnable {
         int i = 0 ;
         while(difference && i<bc.getParties().size()) {
             EthereumKey key = bc.getParties().get(i) ;
-            System.out.println("\nCurrentKey1 : " + key.toString());
             if (ByteUtil.toHexString(ByteUtil.bigIntegerToBytes(key.getPublicKey())).equals(ByteUtil.toHexString(getAdd1()))) {
                 difference = false ;
             }
-            else
-                System.out.println("Add1 : " + ByteUtil.toHexString(getAdd1()));
             i++ ;
         }
         if(difference)
@@ -130,23 +124,18 @@ public class SolidityGetter extends ContractCallImpl implements Runnable {
 
         while(difference && i<bc.getParties().size()) {
             EthereumKey key = bc.getParties().get(i) ;
-            System.out.println("\nCurrentKey2 : " + key.toString());
             if (ByteUtil.toHexString(ByteUtil.bigIntegerToBytes(key.getPublicKey())).equals(ByteUtil.toHexString(getAdd2()))) {
                 difference = false ;
             }
-            else
-                System.out.println("Add2 : " + ByteUtil.toHexString(getAdd2()));
             i++ ;
         }
         if(difference)
             return false ;
 
         if(!bc.getClauses().contains(getClauseA())) {
-            System.out.println("ClauseA : " + getClauseA()) ;
             return false;
         }
         if(!bc.getClauses().contains(getClauseB())) {
-            System.out.println("ClauseB : " + getClauseB()) ;
             return false;
         }
         return true ;

@@ -60,7 +60,7 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         contract.setTitle(id);
     }
 
-    // TODO : JsonTools probleme à régler.
+    // TODO : JsonTools probleme à régler afin de supprimer Deprecated.
     public void setParties(ArrayList<String> partiesEntity){
         for (String part : partiesEntity){
             JsonTools<User> json = new JsonTools<>(new TypeReference<User>(){});
@@ -119,7 +119,6 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         }
         for(EthereumKey key : parties) {
             if(!signatures.containsKey(key)) {
-                System.out.println("\nPAS TOUT LE MONDE EST DANS SIGNATURES\n") ;
                 return false ;
             }
         }
@@ -136,13 +135,12 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         if(!this.equals(contrat) && !this.isFinalized())
             return false;
         setStatus(Status.FINALIZED) ;
-        System.out.println("\n--CONTRACT FINALIZE--\n") ;
+        System.out.println("\n[CONTRACT FINALIZED]\n") ;
         return true ;
     }
 
     @Override
     public boolean equals(EstablisherContract<BigInteger, EthereumKey, EthereumSignature, EthereumSigner> c) {
-        System.out.println(ByteUtil.toHexString(c.getHashableData()) + " ?= " + ByteUtil.toHexString(getHashableData())) ;
         if(!c.getHashableData().equals(getHashableData()))
             return false;
         return true ;
@@ -161,7 +159,7 @@ public class BlockChainContract extends EstablisherContract<BigInteger, Ethereum
         setStatus(Status.SIGNING);
         EthereumSignature signature = signer.sign(new byte[0]) ;
 
-        System.out.println("Signature de " + k.toString() + " Terminer \n");
+        System.out.println("\n\n[Signature done] : " + k.toString() + "\n\n");
 
         if(signature == null) {
             throw new NullPointerException("Signature de " + k.getPublicKey() + "impossible");

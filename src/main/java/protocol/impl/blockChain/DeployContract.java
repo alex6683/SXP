@@ -18,11 +18,6 @@ import static java.lang.Thread.sleep;
 public class DeployContract extends SendTransaction implements Runnable {
     private EthereumContract contract ;
 
-    @Deprecated
-    public DeployContract(SyncBlockChain sync, EthereumContract contract) {
-        super(sync) ;
-        this.contract = contract ;
-    }
 
     public DeployContract(SyncBlockChain sync, EthereumContract contract, EthereumKey keys) {
         super(sync, keys) ;
@@ -65,13 +60,12 @@ public class DeployContract extends SendTransaction implements Runnable {
             else {
                 try {
                     TransactionReceipt receipt = sendTxAndWait(
-                            /*contract.getSender(),*/
                             null,
                             Hex.decode(contract.getContractMetadata().bin)
                     ) ;
                     contract.setContractAdr(receipt.getTransaction().getContractAddress()) ;
                     if(contract.isDeployed())
-                        System.out.println("\n\nContract Deployed !! : " + Hex.toHexString(contract.getContractAdr()) + "\n\n") ;
+                        System.out.println("\n\n[Contract Deployed] : " + Hex.toHexString(contract.getContractAdr()) + "\n\n") ;
                 } catch( Exception e) { e.printStackTrace() ; }
                 try {
                     sleep(5000);

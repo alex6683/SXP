@@ -15,17 +15,12 @@ import java.io.IOException;
  */
 public class EthereumContract {
 
-    // TODO : Changer sender de class (SendTx ou Signer?)
-
     private String contractSrc ;
     private String hashSolidity ;
-    @Deprecated
-    private ECKey sender ;
     private CompilationResult.ContractMetadata contractMetadata ;
     private byte[] contractAdr ;
 
     //Constructor with default Solidity Src
-
     public EthereumContract() throws IOException {
         contractSrc = new SolidityContract().soliditySrc ;
         contractMetadata = null ;
@@ -34,25 +29,13 @@ public class EthereumContract {
         this.compileData(this.compileResult()) ;
     }
 
-    //Constructor with default Solidity Src and your sign keys
-    @Deprecated
-    public EthereumContract(EthereumKey keys) throws IOException {
-        contractSrc = new SolidityContract().soliditySrc ;
-        contractMetadata = null ;
-        contractAdr = null ;
-        hashSolidity = ByteUtil.toHexString(new SHA256Hasher().getHash(contractSrc.getBytes())) ;
-        sender = keys.getPrivECKey() ;
-        this.compileData(this.compileResult()) ;
-    }
-
     //Constructor with your own Solidity Src and your sign keys
     @Deprecated
-    public EthereumContract(String src, EthereumKey keys) throws IOException {
+    public EthereumContract(String src) throws IOException {
         contractSrc = src ;
         contractMetadata = null ;
         contractAdr = null ;
         hashSolidity = ByteUtil.toHexString(new SHA256Hasher().getHash(contractSrc.getBytes())) ;
-        sender = ECKey.fromPrivate(keys.getPrivateKey()) ;
         this.compileData(this.compileResult()) ;
     }
 
@@ -65,9 +48,6 @@ public class EthereumContract {
     }
     public byte[] getContractAdr() {
         return contractAdr;
-    }
-    public ECKey getSender() {
-        return sender ;
     }
     public String gethashSolidity() {
         return hashSolidity;

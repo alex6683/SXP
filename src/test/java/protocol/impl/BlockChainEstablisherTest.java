@@ -10,11 +10,14 @@ import model.entity.EthereumKey;
 import model.entity.User;
 import model.syncManager.UserSyncManagerImpl;
 import org.ethereum.util.ByteUtil;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.spongycastle.util.encoders.Hex;
 import protocol.impl.blockChain.*;
 import util.TestInputGenerator;
+import util.TestUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +26,9 @@ import java.util.HashMap;
  * Created by alex on 06/05/17.
  */
 public class BlockChainEstablisherTest {
+
+    public static Application application;
+    public static final int restPort = 8081;
 
     public static final int N = 2;
 
@@ -37,12 +43,20 @@ public class BlockChainEstablisherTest {
         return newEntities;
     }
 
+    @AfterClass
+    static public void deleteBaseAndPeer(){
+        TestUtils.removeRecursively(new File(".db-" + restPort + "/"));
+        TestUtils.removePeerCache();
+        application.stop();
+    }
+
+
     @Test
     public void Test() {
 
         if (Application.getInstance() == null) {
-            new Application();
-            Application.getInstance().runForTests(8081);
+            application = new Application();
+            Application.getInstance().runForTests(restPort);
         }
 
         //Add Ethereum Account
@@ -96,7 +110,6 @@ public class BlockChainEstablisherTest {
             contractEntity[i].setClauses(clauses);
 
             contractEntity[i].setCreatedAt(new Date());
-            System.out.println("DATES : " + contractEntity[i].getCreatedAt());
         }
         //End Add Entities
         ///////////////////////////////
@@ -153,22 +166,13 @@ public class BlockChainEstablisherTest {
         //time to EstablisherA check if finalized when EstablisherB share Tx Signature
         sleep(300000);
 
-
-        System.out.println("EstaATxFinalSize : " + bcEstablisherA.getContract().getSignatures().size()) ;
-        for(EthereumSignature sign : bcEstablisherA.getContract().getSignatures().values())
-            System.out.println("EstaATxFinal : " + sign.toString()) ;
-
-        System.out.println("EstaBTxFinalSize : " + bcEstablisherB.getContract().getSignatures().size()) ;
-        for(EthereumSignature sign : bcEstablisherB.getContract().getSignatures().values())
-            System.out.println("EstaBTxFinal : " + sign.toString()) ;
-
-        System.out.println("EntityATxFinalSize : " + contractEntity[0].getSignatures().size()) ;
+        System.out.println("\n\n[Entity<A> Final State] :");
         for(String sign : contractEntity[0].getSignatures().keySet())
-            System.out.println("EntityATxFinal : " + sign) ;
+            System.out.println("\t" + sign) ;
 
-        System.out.println("EntityBTxFinalSize : " + contractEntity[1].getSignatures().size()) ;
+        System.out.println("\n\n[Entity<B> Final State] :");
         for(String sign : contractEntity[1].getSignatures().keySet())
-            System.out.println("EntityBTxFinal : " + sign) ;
+            System.out.println("\t" + sign) ;
 
     }
 

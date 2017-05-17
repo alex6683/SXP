@@ -86,45 +86,45 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
     public void initialize(BlockChainContract bcContract, boolean deploy) {
         this.initialize(bcContract);
 
-
-        //TODO : Check if good part with contract.getParti() and good contractID.
-
         establisherService.addListener(new ServiceListener() {
             @Override
             public void notify(Messages messages) {
-                String titleId = messages.getMessage("title") ;
-                if(titleId.equals(contractId)) {
-                    throw new SecurityException("ID doesn't match") ;
-                }
                 String source = messages.getMessage("sourceId") ;
                 if(!containsParti(source)) {
                     throw new SecurityException("Sender isn't a parti of contract") ;
                 }
+                String titleId = messages.getMessage("title") ;
+                if(titleId.equals(contractId)) {
+                    throw new SecurityException("ID doesn't match") ;
+                }
                 String content = messages.getMessage("contract") ;
                 switch (content.charAt(0)) {
                     case '1' :
+                        System.out.println("\n\n[Message retrieved <ContractAddr>] : \n" + source + " -> "
+                                + establisherUser.getEthKeys().toString() + " \n\n") ;
                         if(!ethContract.isDeployed()) {
                             ethContract.setContractAdr(Hex.decode(content.substring(1))) ;
                         }
                         break ;
                     case '2' :
+                        System.out.println("\n\n[Message retrieved <SolidityHash>] : \n" + source + " -> "
+                                + establisherUser.getEthKeys().toString() + " \n\n") ;
                         String solidityHash = ethContract.gethashSolidity();
                         if(!solidityHash.equals(content.substring(1))) {
                             throw new SecurityException("SoliditySrc doesn't match") ;
                         }
                         break ;
                     case '3' :
+                        System.out.println("\n\n[Message retrieved <SignatureHash>] : \n" + source
+                                + " -> " + establisherUser.getEthKeys().toString() + " \n\n") ;
                         String fromWho = messages.getMessage("sourceId");
-                        System.out.println("sourceID : " + fromWho );
                         upDateSignatures(fromWho, content.substring(1));
                         if(!shareTxSign && contract.getSignatures().containsKey(establisherUser.getEthKeys())) {
                             shareSign();
                         }
                         sync.run();
                         contract.getSigner().setSync(sync);
-                        System.out.println("AVANT CHECKCONTRAT");
                         contract.checkContrat(contract) ;
-                        System.out.println("APRES CHECKCONTRAT");
                         sync.closeSync();
                         break ;
                     default: throw new IllegalArgumentException("Sent a bad content") ;
@@ -199,11 +199,9 @@ public class BlockChainEstablisher extends Establisher<BigInteger, EthereumKey, 
     public void upDateSignatures(String who, String TxSign) {
         for(EthereumKey key : contract.getParties()) {
             if (key.toString().equals(who)) {
-                System.out.println("Ajout de la signature de " + key.toString() + " par " + establisherUser.getEthKeys().toString());
+                System.out.println("\n\n[Entity Updated] : " + key.toString() + " added by " + establisherUser.getEthKeys().toString() + "\n\n");
                 contract.addSignature(key, new EthereumSignature(TxSign));
             }
-            else
-                System.out.println("N'ajoute pas " + key.toString());
         }
     }
 

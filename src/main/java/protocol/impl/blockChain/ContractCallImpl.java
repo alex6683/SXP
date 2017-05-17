@@ -14,8 +14,7 @@ public class ContractCallImpl extends SendTransaction {
     private CallTransaction.Contract contractCall ;
     protected EthereumContract contract ;
 
-    @Deprecated
-    //Enlever Deprec pour GET !
+
     public ContractCallImpl(SyncBlockChain ethereum, EthereumContract contract) {
         super(ethereum);
         this.contract = contract ;
@@ -46,15 +45,13 @@ public class ContractCallImpl extends SendTransaction {
     public TransactionReceipt callFunc(String func, Object ...args) throws Exception {
         CallTransaction.Function fct = contractCall.getByName(func);
         byte[] functionCallBytes = fct.encode(args);
-        TransactionReceipt receipt2 = sendTxAndWait(/*contract.getSender(), */contract.getContractAdr(), functionCallBytes);
+        TransactionReceipt receipt2 = sendTxAndWait(contract.getContractAdr(), functionCallBytes);
         if (!receipt2.isSuccessful()) {
             System.err.println("Some troubles calling a contract function : " + receipt2.getError() + " Function : " + func);
             return null;
         }
         return receipt2 ;
     }
-
-
 
     //Return value of get function of our contract
     public Object getReturnContract(String functionName) throws Exception {

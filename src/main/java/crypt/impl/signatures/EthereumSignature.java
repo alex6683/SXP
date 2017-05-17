@@ -18,10 +18,6 @@ public class EthereumSignature {
     @XmlElement(name="contractAdr")
     private byte[] contractAdr ;
 
-    /*
-    @XmlElement(name="numBlock")
-    private long numBlock ;
-    */
     
     public EthereumSignature(@JsonProperty("hashSign") Transaction tx) {
         this.tx = tx;

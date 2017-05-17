@@ -42,8 +42,8 @@ public class SolidityConstructorTest {
                 ByteUtil.hexStringToBytes("0x0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f"),
                 "velo",
                 "carotte",
-                "IZI",
-                "OKLM"
+                "A échange vélo à B",
+                "B échange carotte à A"
         ).run();
 
         new SoliditySigner(sync, contract, sender).run();

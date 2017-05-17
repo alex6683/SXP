@@ -20,12 +20,11 @@ public abstract class SendTransaction {
     protected SyncBlockChain sync ;
     protected Map<ByteArrayWrapper, TransactionReceipt> txWaiters =
             Collections.synchronizedMap(new HashMap<ByteArrayWrapper, TransactionReceipt>());
+
     protected long numBlock ;
 
-    //TODO : Utiliser sender key ici plutot que dans EthereumContract
     private ECKey senderECKey ;
 
-    @Deprecated
     public SendTransaction(SyncBlockChain ethereum) {
         sync = ethereum ;
     }
@@ -33,28 +32,6 @@ public abstract class SendTransaction {
     public SendTransaction(SyncBlockChain ethereum, EthereumKey keys) {
         sync = ethereum ;
         senderECKey = keys.getPrivECKey() ;
-    }
-
-    @Deprecated
-    public TransactionReceipt sendTxAndWait(ECKey senderAddress, byte[] receiveAddress, byte[] data) throws Exception {
-        BigInteger nonce = sync.getEthereum().getRepository().getNonce(senderAddress.getAddress());
-        Transaction tx = new Transaction(
-                //Nonce
-                ByteUtil.bigIntegerToBytes(nonce),
-                //GasPrice
-                ByteUtil.longToBytesNoLeadZeroes(sync.getEthereum().getGasPrice()),
-                //GasLimit
-                ByteUtil.longToBytesNoLeadZeroes(3_000_000),
-                receiveAddress,
-                //value
-                ByteUtil.ZERO_BYTE_ARRAY,
-                data,
-                sync.getEthereum().getChainIdForNextBlock());
-        tx.sign(senderAddress);
-
-        sync.getEthereum().submitTransaction(tx);
-
-        return waitForTx(tx.getHash());
     }
 
     public TransactionReceipt sendTxAndWait(byte[] receiveAddress, byte[] data) throws Exception {
@@ -95,8 +72,8 @@ public abstract class SendTransaction {
                     throw new RuntimeException("\n\n\nThe transaction was not included during last 16 blocks: " + txHashW.toString().substring(0,8)) ;
                 }
                 else {
-                    System.out.println("\n\n\nWaiting for block with transaction 0x" + txHashW.toString().substring(0,8) +
-                            " included (" + (curBlock - startBlock) + " blocks received so far) ...\n\n\n") ;
+                    System.out.println("\n\n[Waiting<IncludedTransaction>] : 0x" + txHashW.toString().substring(0,8) +
+                            "\n\t(" + (curBlock - startBlock) + " blocks received so far) ...\n\n\n") ;
                 }
             }
             synchronized (this) {

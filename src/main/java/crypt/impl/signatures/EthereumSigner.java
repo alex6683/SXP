@@ -32,8 +32,6 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
         return bcContract;
     }
 
-    //TODO : Utiliser getKey() pour signer la Tx ethereum
-
     @Override
     public EthereumKey getKey() {
         return super.key ;
@@ -41,7 +39,7 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
 
     @Override
     public EthereumSignature sign(byte[] message) {
-        System.out.println("\n\nSINGNING of " + getKey().toString() +"\n\n") ;
+        System.out.println("\n\n[Signature Processing] : " + getKey().toString() +"\n\n") ;
 
         SoliditySigner signer = new SoliditySigner(sync, contract, getKey()) ;
         signer.run() ;
@@ -59,32 +57,26 @@ public class EthereumSigner extends AbstractSigner<EthereumSignature, EthereumKe
             throw new NullPointerException("BlockChainContract not Set") ;
         }
 
-        System.out.println(getKey().toString() +
-                " vérifie la Tx +\n"  + ethereumSignature.toString()) ;
+        System.out.println("\n\n[Verification<Transaction>] : "  + ethereumSignature.toString() + "\n\n") ;
 
         ethereumSignature.getTx().verify();
 
-        System.out.println("\n\nvérifie Signature !");
+        System.out.println("\n\n[Verification<SignatureOnBlockChain>]\n\n");
 
         SolidityGetterSignature call = new SolidityGetterSignature(sync, contract) ;
         call.run();
         if(!call.getIsSigned()) {
-            System.out.println("\n\nNON SIGNE PAR LES DEUX PARTIES\n");
             return false;
         }
 
-        System.out.println("\n\nvérifie Getters !");
+
+        System.out.println("\n\n[Verification<GettersOnBlockChain>]\n\n");
 
         SolidityGetter getter = new SolidityGetter(sync, contract) ;
         getter.run();
 
 
-        for(EthereumKey key : bcContract.getParties())
-            System.out.println("Parties : " + key.toString());
-
-
         if(!getter.equals(bcContract)) {
-            System.out.println("\n\nCONTRAT NON EQUIVALENT\n");
             return false;
         }
 
